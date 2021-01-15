@@ -21,16 +21,15 @@
 
     <title>DeployBoard</title>
   </head>
-  <body class="bg-light">
+  <body class="site bg-light">
     {% if header != False %}
       {% include "header.html" %}
     {% endif %}
-
-    {% block body %}{% endblock %}
-
+    <main class="site-content">
+      {% block body %}{% endblock %}
+    </main>
     {% if not no_footer %}
       {% include "footer.html" %}
     {% endif %}
-
   </body>
 </html>
