@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Settings</h2>
+</div>
+
+<div class="container">
+  {% include "settings_nav.html" %}
+
+  {% if error %}
+  <div>{{ error }}</div>
+  {% endif %}
+
+  <div class="table">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Role</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Enabled</th>
+          <th>Created Timestamp (UTC)</th>
+          <th>Modified Timestamp (UTC)</th>
+          <th>Modified By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if users %}
+        {% for user in users %}
+        <tr>
+          <td>{{ user['email'] }}</td>
+          <td>{{ user['role'] }}</td>
+          <td>{{ user['first_name'] }}</td>
+          <td>{{ user['last_name'] }}</td>
+          <td>{{ user['enabled'] }}</td>
+          <td>{{ user['created_timestamp'] | epoch_to_date }}</td>
+          <td>{{ user['modified_timestamp'] | epoch_to_date }}</td>
+          <td>{{ user['modified_by'] }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

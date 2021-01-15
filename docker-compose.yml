@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+  db:
+    image: mongo:4
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - db-data:/data/db
+    networks:
+      - backend-network
+
+  api:
+    build: src/api
+    restart: always
+    volumes:
+      - ./src/api:/app
+    ports:
+      - 8081:8081
+    networks:
+      - backend-network
+      - frontend-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - APP_SECRET=changeme
+      - MONGO_URI=mongodb://db:27017
+      - DPB_ACCOUNT=DeployBoard
+
+  web:
+    build: src/web
+    restart: always
+    volumes:
+      - ./src/web:/app
+    ports:
+      - 80:8080
+    networks:
+      - frontend-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - APP_SECRET=changeme
+      - LOG_LEVEL=debug
+      - FLASK_DEBUG=True
+      - FLASK_APP=web
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=8080
+
+volumes:
+  db-data:
+networks:
+  backend-network:
+  frontend-network:
