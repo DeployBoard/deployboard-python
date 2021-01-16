@@ -8,8 +8,11 @@ from routes.dashboard import dashboard_page
 from routes.ci import ci_page
 from routes.applications import applications_page
 from routes.logs import logs_page
+from routes.analytics import analytics_page
 from routes.users import users_page
 from routes.apikeys import apikeys_page
+from routes.integrations import integrations_page
+from routes.billing import billing_page
 from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
@@ -25,8 +28,11 @@ app.register_blueprint(dashboard_page, url_prefix='/dashboard')
 app.register_blueprint(ci_page, url_prefix='/ci')
 app.register_blueprint(applications_page, url_prefix='/applications')
 app.register_blueprint(logs_page, url_prefix='/logs')
+app.register_blueprint(analytics_page, url_prefix='/analytics')
 app.register_blueprint(users_page, url_prefix='/settings/users')
 app.register_blueprint(apikeys_page, url_prefix='/settings/apikeys')
+app.register_blueprint(integrations_page, url_prefix='/settings/integrations')
+app.register_blueprint(billing_page, url_prefix='/settings/billing')
 
 
 @app.route('/')
