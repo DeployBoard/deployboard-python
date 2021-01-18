@@ -4,7 +4,34 @@
 
 <div class="container">
   <div class="d-inline">
-    <h2 class="float-left">Logs</h2>
+    <div class="float-left">
+      <h2>Logs</h2>
+      <form class="form-inline" method="post">
+        <label for="application">Application:</label>
+        <select class="form-control m-1 mr-2" id="application" name="application" value="{{ request.form.application }}">
+          <option>All</option>
+          {% for application in applications %}
+          <option {% if application == query_string['application'] %}selected{% endif %}>{{ application }}</option>
+          {% endfor %}
+        </select>
+        <label for="service">Service:</label>
+        <select class="form-control m-1 mr-2" id="service" name="service" value="{{ request.form.service }}">
+          <option>All</option>
+          {% for service in services %}
+          <option {% if service == query_string['service'] %}selected{% endif %}>{{ service }}</option>
+          {% endfor %}
+        </select>
+        <label for="environment">Environment:</label>
+        <select class="form-control ml-1 mr-2" id="environment" name="environment" value="{{ request.form.environment }}">
+          <option>All</option>
+          {% for environment in environments %}
+          <option {% if environment == query_string['environment'] %}selected{% endif %}>{{ environment }}</option>
+          {% endfor %}
+        </select>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input class="btn btn-primary" type="submit" value="Search">
+      </form>
+    </div>
     <div class="float-right">
       <input class="form-control" id="logsInput" type="text" placeholder="Filter..">
     </div>
