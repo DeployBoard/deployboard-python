@@ -39,13 +39,17 @@ def applications():
     return render_template("applications.html", app_list=app_list, services=services)
 
 
+# TODO: Get this to work
 @applications_page.route('/', methods=['POST'])
 def add_application():
     """
-    Queries our services api endpoint then passes that data into the applications template
+    Creates a new top level application from our request form
     """
+    # Log our form for debugging
     logger.debug(f'request.form: {request.form}')
+    # Set application_name from our request form
     application_name = request.form['application_name']
+    # Log our application name for debugging
     logger.debug(f'application_name: {application_name}')
     # Get data from our services api endpoint.
     response = requests.get(
