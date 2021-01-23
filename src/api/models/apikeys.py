@@ -50,14 +50,13 @@ class ApiKeyResponse(ApiKey):
 
 
 class CreateApiKey(CustomBaseModel):
-    name: str = None
-    role: str = None
+    name: str
+    role: str
     enabled: Optional[bool] = Field(True, const=True)
 
     class Config:
         schema_extra = {
             "example": {
-                "schema_version": 1.0,
                 "name": "test-api-key",
                 "role": "Editor"
             }

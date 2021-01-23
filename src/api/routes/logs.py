@@ -87,13 +87,13 @@ async def get_one_log(_id: str, current_user: User = Depends(get_current_active_
     except Exception as e:
         # Log our exception for debugging.
         logger.error(e)
-        raise HTTPException(status_code=404, detail=f"{_id} not found")
+        raise HTTPException(status_code=404, detail=f"Log: {_id} not found")
     # find_one() returns NoneType if not found, so we need to catch that case and Raise exception.
     if log is None:
-        raise HTTPException(status_code=404, detail=f"{_id} not found")
+        raise HTTPException(status_code=404, detail=f"Log: {_id} not found")
     # Raise exception if id not found in service
     if '_id' not in log:
-        raise HTTPException(status_code=404, detail=f"{_id} not found")
+        raise HTTPException(status_code=404, detail=f"Log: {_id} not found")
     # Convert the _id to a string.
     log['_id'] = str(log['_id'])
     # Print our document for debugging.

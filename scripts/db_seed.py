@@ -34,7 +34,7 @@ def create_account():
     insert_resp = db.accounts.insert_one(account_dict)
     # Log for debugging.
     logger.debug(f"insert_resp: {insert_resp.inserted_id}")
-    return
+    return insert_resp.inserted_id
 
 
 def create_user(user_role):
@@ -61,7 +61,7 @@ def create_user(user_role):
     insert_resp = db.users.insert_one(user_dict)
     # Log for debugging.
     logger.debug(f"insert_resp: {insert_resp.inserted_id}")
-    return
+    return insert_resp.inserted_id
 
 
 def create_api_key(api_key_role):
@@ -86,7 +86,7 @@ def create_api_key(api_key_role):
     insert_resp = db.apikeys.insert_one(api_key_dict)
     # Log for debugging.
     logger.debug(f"insert_resp: {insert_resp.inserted_id}")
-    return
+    return insert_resp.inserted_id
 
 
 def create_service(application, service):
@@ -139,7 +139,7 @@ def create_service(application, service):
     insert_resp = db.services.insert_one(service_dict)
     # Log for debugging.
     logger.debug(f"insert_resp: {insert_resp.inserted_id}")
-    return
+    return insert_resp.inserted_id
 
 
 def create_logs(application, service, days_ago):
@@ -205,7 +205,7 @@ def create_logs(application, service, days_ago):
                 }
             )
     # Log for debugging.
-    logger.debug(f"logs_list: {logs_list}")
+    # logger.debug(f"logs_list: {logs_list}")
     # Insert the logs_list into the db.
     insert_resp = db.logs.insert_many(logs_list)
     # Log for debugging.
@@ -213,24 +213,45 @@ def create_logs(application, service, days_ago):
     return
 
 
-# Create an account.
-create_account()
-# Create a user and api key for each role.
-for role in ["Viewer", "Editor", "Admin"]:
-    # Create the user.
-    create_user(role)
-    # Create the api key.
-    create_api_key(role)
-# Create list of application/service combo dicts.
-application_services = [
-    {"application": "Sample", "service": "Api"},
-    {"application": "Sample", "service": "Web"},
-    {"application": "Admin", "service": "Api"},
-    {"application": "Admin", "service": "Web"}
-]
-# Write a service object in the db for each item in the list.
-for item in application_services:
-    # Write the service in the db.
-    create_service(item['application'], item['service'])
-    # Write the logs to the db.
-    create_logs(item['application'], item['service'], 30)
+def seed():
+    # Instantiate our return dict with our account creation.
+    response_dict = {'account': create_account()}
+
+    # Instantiate our users dict.
+    users_dict = {}
+    # Instantiate our api_key dict.
+    api_keys_dict = {}
+
+    # Create a user and api key for each role.
+    for role in ["Viewer", "Editor", "Admin"]:
+        # Create the user.
+        users_dict[role] = create_user(role)
+        # Create the api key.
+        api_keys_dict[role] = create_api_key(role)
+
+    # Add users_dict to our return_dict.
+    response_dict['users'] = users_dict
+    # Add api_keys_dict to our return_dict.
+    response_dict['api_keys'] = api_keys_dict
+
+    # Create list of application/service combo dicts.
+    application_services = [
+        {"application": "Sample", "service": "Api"},
+        {"application": "Sample", "service": "Web"},
+        {"application": "Admin", "service": "Api"},
+        {"application": "Admin", "service": "Web"}
+    ]
+    # Write a service object in the db for each item in the list.
+    for item in application_services:
+        # Write the service in the db.
+        create_service(item['application'], item['service'])
+        # Write the logs to the db.
+        create_logs(item['application'], item['service'], 30)
+
+    logger.info(f'response_dict: {response_dict}')
+
+    return response_dict
+
+
+if __name__ == "__main__":
+    seed()

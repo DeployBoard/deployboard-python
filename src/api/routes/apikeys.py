@@ -48,8 +48,8 @@ async def get_apikey(_id, current_user: User = Depends(get_current_active_user))
     # Query db for user id in the requester account.
     key = db.apikeys.find_one({"_id": ObjectId(_id), "account": current_user['account']})
     if key is None:
-        # Raise exception if user not found.
-        raise HTTPException(status_code=404, detail="User Not Found.")
+        # Raise exception if key not found.
+        raise HTTPException(status_code=404, detail="Key not found.")
     # Convert the _id to a string.
     key['_id'] = str(key['_id'])
     # Log our list for debugging.
@@ -102,8 +102,8 @@ async def delete_apikey(_id, current_user: User = Depends(get_current_active_use
     apikey = db.apikeys.find_one({"_id": ObjectId(_id), "account": current_user['account']})
     if apikey is None:
         # Raise exception if api key not found.
-        raise HTTPException(status_code=404, detail="Api Key Not Found.")
+        raise HTTPException(status_code=404, detail="Key not found.")
     # Delete the api key.
     db.apikeys.delete_one({"_id": ObjectId(_id), "account": current_user['account']})
     # Return the deleted api key id.
-    return {'_id': _id, 'detail': 'Api Key deleted successfully.'}
+    return {'_id': _id, 'detail': 'Key deleted successfully.'}
