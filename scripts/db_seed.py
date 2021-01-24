@@ -210,7 +210,8 @@ def create_logs(application, service, days_ago):
     insert_resp = db.logs.insert_many(logs_list)
     # Log for debugging.
     logger.debug(f"insert_resp: {insert_resp}")
-    return
+    # return inserted_ids
+    return insert_resp.inserted_ids
 
 
 def seed():
@@ -244,9 +245,9 @@ def seed():
     # Write a service object in the db for each item in the list.
     for item in application_services:
         # Write the service in the db.
-        create_service(item['application'], item['service'])
+        response_dict['service'] = create_service(item['application'], item['service'])
         # Write the logs to the db.
-        create_logs(item['application'], item['service'], 30)
+        response_dict['logs'] = create_logs(item['application'], item['service'], 30)
 
     logger.info(f'response_dict: {response_dict}')
 
