@@ -6,22 +6,23 @@ client = TestClient(app)
 
 
 # GET /logs/{_id}
-def test_get_log_valid_key(admin_token, log):
-    response = client.get(f"/logs/{log}", headers={"Authorization": admin_token})
+def test_get_log_valid_key(admin_token, seed_data):
+    response = client.get(f"/logs/{str(seed_data['logs'][0])}", headers={"Authorization": admin_token})
     assert response.status_code == 200
-    assert response.json()['_id'] == log
+    assert response.json()['_id'] == str(seed_data['logs'][0])
     assert 'hashed_password' not in response.json()
     assert '_id' in response.json()
 
 
-def test_get_log_bad_token(apikey):
-    response = client.get(f"/logs/{apikey}", headers={"Authorization": "bad-token"})
+def test_get_log_bad_token(seed_data):
+    response = client.get(f"/logs/{str(seed_data['logs'][0])}", headers={"Authorization": "bad-token"})
     assert response.status_code == 401
     assert response.json() == {"detail": "Not authenticated"}
 
 
-def test_get_log_invalid_role(viewer_token, log):
-    response = client.get(f"/logs/{log}", headers={"Authorization": viewer_token})
+@pytest.mark.skip(reason="Currently all roles are able to view logs, so none are invalid.")
+def test_get_log_invalid_role(viewer_token, seed_data):
+    response = client.get(f"/logs/{str(seed_data['logs'][0])}", headers={"Authorization": viewer_token})
     assert response.status_code == 401
     assert response.json() == {"detail": "Unauthorized"}
 
