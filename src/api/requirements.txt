@@ -11,7 +11,3 @@ pydantic[email]==1.7.3
 
 # MongoDB
 pymongo[srv]==3.11.2
-
-# Automated tests
-pytest==6.2.1
-pytest-cov==2.10.1

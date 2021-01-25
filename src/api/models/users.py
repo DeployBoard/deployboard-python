@@ -69,8 +69,8 @@ class UserInDB(User):
 
 
 class CreateUser(CustomBaseModel):
-    email: EmailStr = None
-    role: str = None
+    email: EmailStr
+    role: str
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     enabled: bool = True
@@ -78,7 +78,6 @@ class CreateUser(CustomBaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "schema_version": 1.0,
                 "email": "jdoe2@example.com",
                 "role": "Editor",
                 "first_name": "John",

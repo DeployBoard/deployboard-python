@@ -16,6 +16,7 @@ ALGORITHM = "HS256"
 def login():
     return render_template("login.html", header=False)
 
+
 @login_page.route('/', methods=['POST'])
 def login_post():
     logger.debug(request.form)
