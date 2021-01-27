@@ -2,10 +2,114 @@
 
 {% block body %}
 
-<div class="container">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
+<div class="container" id="parent">
   <div class="d-inline">
-    <h2 class="float-left">Analytics - Coming Soon</h2>
+    <div class="float-left">
+      <h2>Analytics</h2>
+      <form class="form-inline" method="post">
+        <label for="application">Application:</label>
+        <select class="form-control m-1 mr-2" id="application" name="application" value="{{ request.form.application }}">
+          <option>All</option>
+          {% for application in applications %}
+          <option {% if application == query_string['application'] %}selected{% endif %}>{{ application }}</option>
+          {% endfor %}
+        </select>
+        <label for="service">Service:</label>
+        <select class="form-control m-1 mr-2" id="service" name="service" value="{{ request.form.service }}">
+          <option>All</option>
+          {% for service in services %}
+          <option {% if service == query_string['service'] %}selected{% endif %}>{{ service }}</option>
+          {% endfor %}
+        </select>
+        <label for="environment">Environment:</label>
+        <select class="form-control ml-1 mr-2" id="environment" name="environment" value="{{ request.form.environment }}">
+          <option>All</option>
+          {% for environment in environments %}
+          <option {% if environment == query_string['environment'] %}selected{% endif %}>{{ environment }}</option>
+          {% endfor %}
+        </select>
+<!--
+  TODO: This will be used for stacked charts, but we aren't ready for this yet.
+        <label for="groupby">Group By:</label>
+        <select class="form-control ml-1 mr-2" id="groupby" name="groupby" value="{{ request.form.groupby}}">
+          <option>Application</option>
+          <option>Service</option>
+          <option>Environment</option>
+        </select>
+-->
+        <label for="daysago">Days Ago:</label>
+        <select class="form-control ml-1 mr-2" id="daysago" name="daysago" value="{{ request.form.daysago }}">
+          <option {% if query_string['daysago'] == '7' %}selected{% endif %}>7</option>
+          <option {% if query_string['daysago'] == '14' %}selected{% endif %}>14</option>
+          <option {% if query_string['daysago'] == '30' %}selected{% endif %}>30</option>
+          <option {% if query_string['daysago'] == '60' %}selected{% endif %}>60</option>
+          <option {% if query_string['daysago'] == '120' %}selected{% endif %}>120</option>
+        </select>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input class="btn btn-primary" type="submit" value="Search">
+      </form>
+    </div>
+  </div>
+  <div>
+    <canvas class="w-100" id="totalDailyDeploymentsChart" height="300px"></canvas>
   </div>
 </div>
+
+<script>
+  // get chart canvas
+  var ctx = document.getElementById("totalDailyDeploymentsChart").getContext("2d");
+
+  // create the chart using the chart canvas
+  var totalDailyDeploymentsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [{% for item in totalDailyDeploymentData %}'{{ item['date'] }}',{% endfor %}],
+      datasets: [
+        {
+          label: 'Successful Deployments',
+          data: [{% for item in totalDailyDeploymentData %}{{ item["success_count"] }},{% endfor %}],
+          backgroundColor: "rgba(50,150,255,0.6)",
+          borderColor: "rgba(50,150,255,1)",
+          borderWidth: 1
+        },
+        {
+          label: 'Failed Deployments',
+          data: [{% for item in totalDailyDeploymentData %}{{ item["failed_count"] }},{% endfor %}],
+          backgroundColor: "rgba(255,20,25,0.4)",
+          borderColor: "rgba(255,25,25,1)",
+          borderWidth: 1,
+          type: 'line',
+          fill: false,
+          lineTension: 0.2
+        }
+      ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Deployments and Errors per Day'
+      },
+      scales: {
+        xAxes: [{ 
+          gridLines: {
+            display:false
+          }
+         }],
+        yAxes: [{
+          gridLines: {
+            display:false
+          },
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+</script>
 
 {% endblock %}
