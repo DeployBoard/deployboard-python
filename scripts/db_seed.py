@@ -247,7 +247,7 @@ def seed():
         # Write the service in the db.
         response_dict['service'] = create_service(item['application'], item['service'])
         # Write the logs to the db.
-        response_dict['logs'] = create_logs(item['application'], item['service'], 30)
+        response_dict['logs'] = create_logs(item['application'], item['service'], 120)
 
     logger.info(f'response_dict: {response_dict}')
 
