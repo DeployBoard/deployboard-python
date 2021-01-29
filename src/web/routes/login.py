@@ -31,7 +31,10 @@ def login_post():
                 'password': attempted_password
             }
         )
-        logger.debug(f'response: {response}')
+        logger.debug(f'response: {response.status_code}')
+        if response.status_code == 401:
+            return render_template("login.html", header=False, error='Invalid Username or Password')
+
         token = response.json()['access_token']
         logger.debug(f'token: {token}')
 
