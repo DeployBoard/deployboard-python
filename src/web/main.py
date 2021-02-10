@@ -41,15 +41,24 @@ app.register_blueprint(environments_page, url_prefix='/settings/environments')
 def index():
     # If user is logged in.
     if 'logged_in' in session:
-        # If session is not expired.
-        # TODO: Remove this when refresh token is in place, we also need to apply this to all routes, not just index
-        if session['exp'] < datetime.now().timestamp():
-            # redirect to login page to clear session, which will redirect to login page.
-            return redirect(url_for('logout_page.logout'))
         # We're logged in so go to dashboard.
         return redirect(url_for('dashboard_page.dashboard'))
     # We're not logged in so go to login page.
     return redirect(url_for('login_page.login'))
+
+
+@app.before_request
+def check_session_expired():
+    """ Checks if session is expired """
+    # If user is logged in.
+    if 'logged_in' in session:
+        # If session is not expired.
+        # TODO: Remove this when refresh token is in place, we also need to apply this to all routes, not just index
+        if session['exp'] < datetime.now().timestamp():
+            # Clear the user's session.
+            session.clear()
+            # redirect to login page to clear session, which will redirect to login page.
+            return redirect(url_for('logout_page.logout'))
 
 
 @app.template_filter()
