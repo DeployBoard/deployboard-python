@@ -1,4 +1,7 @@
 # DeployBoard
+
+[![codecov](https://codecov.io/gh/DeployBoard/deployboard/branch/main/graph/badge.svg?token=RBHVGXFWTD)](https://codecov.io/gh/DeployBoard/deployboard)
+
 DeployBoard is a simple deployment tracking tool. Easily plugs in to any deployment tool or pipeline. Tracks DORA metrics, compliance, and more.
 
 ## Deployment
