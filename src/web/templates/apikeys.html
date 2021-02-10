@@ -13,36 +13,34 @@
   <div>{{ error }}</div>
   {% endif %}
 
-  <div class="table">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Role</th>
-          <th>Enabled</th>
-          <th>Created By</th>
-          <th>Created Timestamp (UTC)</th>
-          <th>Modified By</th>
-          <th>Modified Timestamp (UTC)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if apikeys %}
-        {% for key in apikeys %}
-        <tr>
-          <td>{{ key['name'] }}</td>
-          <td>{{ key['role'] }}</td>
-          <td>{{ key['enabled'] }}</td>
-          <td>{{ key['created_by'] }}</td>
-          <td>{{ key['created_timestamp'] | epoch_to_date }}</td>
-          <td>{{ key['modified_by'] }}</td>
-          <td>{{ key['modified_timestamp'] | epoch_to_date }}</td>
-        </tr>
-        {% endfor %}
-        {% endif %}
-      </tbody>
-    </table>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Enabled</th>
+        <th>Created By</th>
+        <th>Created Timestamp (UTC)</th>
+        <th>Modified By</th>
+        <th>Modified Timestamp (UTC)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if apikeys %}
+      {% for key in apikeys %}
+      <tr>
+        <td>{{ key['name'] }}</td>
+        <td>{{ key['role'] }}</td>
+        <td>{{ key['enabled'] }}</td>
+        <td>{{ key['created_by'] }}</td>
+        <td>{{ key['created_timestamp'] | epoch_to_date }}</td>
+        <td>{{ key['modified_by'] }}</td>
+        <td>{{ key['modified_timestamp'] | epoch_to_date }}</td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
 </div>
 
 {% endblock %}

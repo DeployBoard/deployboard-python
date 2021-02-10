@@ -41,33 +41,30 @@
   <div>{{ error }}</div>
   {% endif %}
 
-  <div class="table">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>Application</th>
-          <th>Service</th>
-          <th>Environment</th>
-          <th>Version</th>
-          <th>Status</th>
-          <th>Timestamp (UTC)</th>
-        </tr>
-      </thead>
-      <tbody id="logsTable">
-        {% for log in logs %}
-        <tr>
-          <td>{{ log['application'] }}</td>
-          <td>{{ log['service'] }}</td>
-          <td>{{ log['environment'] }}</td>
-          <td>{{ log['version'] }}</td>
-          <td>{{ log['status'] }}</td>
-          <td>{{ log['timestamp'] | epoch_to_date }}</td>
-          <td style="display:none;">{{ log['tags'] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Service</th>
+        <th>Environment</th>
+        <th>Version</th>
+        <th>Status</th>
+        <th>Timestamp (UTC)</th>
+      </tr>
+    </thead>
+    <tbody id="logsTable">
+      {% for log in logs %}
+      <tr>
+        <td>{{ log['application'] }}</td>
+        <td>{{ log['service'] }}</td>
+        <td>{{ log['environment'] }}</td>
+        <td>{{ log['version'] }}</td>
+        <td>{{ log['status'] }}</td>
+        <td>{{ log['timestamp'] | epoch_to_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 <!-- Filter Script -->
