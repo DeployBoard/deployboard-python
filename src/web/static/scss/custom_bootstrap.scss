@@ -1,0 +1,9 @@
+// Our variable overrides
+$theme-colors: (
+  "primary": #0090ff,
+  "light": #f2f9fd,
+  "dark": #212222
+);
+
+// Bootstrap and its default variables
+@import "bootstrap";
