@@ -11,3 +11,57 @@ body,html {
 .site-content {
   flex: 1;
 }
+
+/* Rounded Table */
+table {
+    border-collapse: separate;
+    border-spacing: 0 3px;
+    width: 100%;
+}
+thead th {
+    padding: 15px;
+    align: center;
+}
+td {
+    border-top: 1px solid #9fcdff;
+    border-bottom: 1px solid #9fcdff;
+    padding: 15px;
+    background-color: white;
+}
+tbody tr:hover td {
+    border-top: 1px solid #3f79b5;
+    border-bottom: 1px solid #3f79b5;
+}
+
+/*thead tr:first-child th:first-child {*/
+/*    border: 1px solid #9fcdff;*/
+/*    border-right: 0;*/
+/*    border-radius: 0.4em 0 0 0.4em;*/
+/*}*/
+/*thead tr:first-child th:last-child {*/
+/*    border: 1px solid #9fcdff;*/
+/*    border-left: 0;*/
+/*    border-radius: 0 0.4em 0.4em 0;*/
+/*}*/
+
+tbody tr td:first-child {
+    border: 1px solid #9fcdff;
+    border-right: 0;
+    border-radius: 0.4em 0 0 0.4em;
+}
+tbody tr:hover td:first-child {
+    border: 1px solid #3f79b5;
+    border-right: 0;
+    border-radius: 0.4em 0 0 0.4em;
+}
+
+tbody tr td:last-child {
+    border: 1px solid #9fcdff;
+    border-left: 0;
+    border-radius: 0 0.4em 0.4em 0;
+}
+tbody tr:hover td:last-child {
+    border: 1px solid #3f79b5;
+    border-left: 0;
+    border-radius: 0 0.4em 0.4em 0;
+}

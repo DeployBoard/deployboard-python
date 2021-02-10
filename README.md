@@ -3,6 +3,12 @@ DeployBoard is a simple deployment tracking tool. Easily plugs in to any deploym
 
 ## Deployment
 
+Build bootstrap with our custom scss from the root of this repository.
+
+`bash scripts/build_bootstrap.sh`
+
+Start the app.
+
 `docker-compose up -d`
 
 ## Development

@@ -27,7 +27,7 @@ def create_account():
     account_dict = {
         "schema_version": 1.0,
         "account": "Example",
-        "environment_order": ["Prod", "Stage", "Dev"],
+        "environments": ["Prod", "Stage", "Dev"],
         "created_timestamp": 1610053395
     }
     # Insert the user into the db.

@@ -13,6 +13,7 @@ from routes.users import users_page
 from routes.apikeys import apikeys_page
 from routes.integrations import integrations_page
 from routes.billing import billing_page
+from routes.environments import environments_page
 from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
@@ -33,6 +34,7 @@ app.register_blueprint(users_page, url_prefix='/settings/users')
 app.register_blueprint(apikeys_page, url_prefix='/settings/apikeys')
 app.register_blueprint(integrations_page, url_prefix='/settings/integrations')
 app.register_blueprint(billing_page, url_prefix='/settings/billing')
+app.register_blueprint(environments_page, url_prefix='/settings/environments')
 
 
 @app.route('/')
@@ -63,6 +65,22 @@ def epoch_to_date(epoch):
     formatted_date = new_date.strftime('%m/%d/%Y %H:%M:%S')
     # Return the formatted date.
     return formatted_date
+
+
+@app.context_processor
+def inject_theme():
+    """ Injects globals into Jinja templates """
+    # Check if theme is in session.
+    if 'theme' in session:
+        # If theme in session, use the theme.
+        theme = session['theme']
+    else:
+        theme = 'light'
+    # Check that theme is either light or dark, in case someone manually changed session.
+    if theme not in ['light', 'dark']:
+        # Default to light.
+        theme = 'light'
+    return dict(theme=theme)
 
 
 @app.route('/settings', methods=['GET'])

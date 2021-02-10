@@ -60,10 +60,10 @@
 
 <script>
   // get chart canvas
-  var ctx = document.getElementById("totalDailyDeploymentsChart").getContext("2d");
+  let ctx = document.getElementById("totalDailyDeploymentsChart").getContext("2d");
 
   // create the chart using the chart canvas
-  var totalDailyDeploymentsChart = new Chart(ctx, {
+  let totalDailyDeploymentsChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: [{% for item in totalDailyDeploymentData %}'{{ item['date'] }}',{% endfor %}],

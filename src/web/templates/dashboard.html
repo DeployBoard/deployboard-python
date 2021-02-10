@@ -12,40 +12,46 @@
       <input class="form-control" id="dashboardInput" type="text" placeholder="Filter..">
     </div>
   </div>
+</div>
+
+<div class="container">
 
   {% if error %}
   <div>{{ error }}</div>
   {% endif %}
 
-  <div class="table">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>Application</th>
-          <th>Service</th>
-          <th>Environment</th>
-          <th>Version</th>
-          <th>Status</th>
-          <th>Timestamp (UTC)</th>
-        </tr>
-      </thead>
-      <tbody id="dashboardTable">
-        {% for service in services%}
-        {% for version in service.versions %}
-        <tr>
-          <td>{{ service['application'] }}</td>
-          <td>{{ service['service'] }}</td>
-          <td>{{ version['environment'] }}</td>
-          <td>{{ version['version'] }}</td>
-          <td>{{ version['status'] }}</td>
-          <td>{{ version['timestamp'] | epoch_to_date }}</td>
-          <td style="display:none;">{{ service['tags'] }}</td>
-        </tr>
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Service</th>
+        <th>Environment</th>
+        <th>Version</th>
+        <th>Status</th>
+        <th>Tags</th>
+        <th>Timestamp (UTC)</th>
+      </tr>
+    </thead>
+    <tbody id="dashboardTable">
+      {% for service in services %}
+      {% for version in service.versions %}
+      <tr>
+        <td>{{ service['application'] }}</td>
+        <td>{{ service['service'] }}</td>
+        <td>{{ version['environment'] }}</td>
+        <td>{{ version['version'] }}</td>
+        <td>{{ version['status'] }}</td>
+        <td>
+        {% for tag in service['tags'] %}
+          <span class="badge badge-primary">{{ tag }}</span>
         {% endfor %}
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+        </td>
+        <td>{{ version['timestamp'] | epoch_to_date }}</td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 <!-- Filter Script -->

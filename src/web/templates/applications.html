@@ -13,30 +13,28 @@
   {% if error %}
   <div>{{ error }}</div>
   {% endif %}
-  <div class="table">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>Application</th>
-          <th>Services</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for app in app_list %}
-        <tr>
-          <td>{{ app }}</td>
-          <td>
-            {% for service in services %}
-              {% if app in service.application %}
-                {{ service.service }}
-              {% endif %}
-            {% endfor %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div> <!-- table-responsive-->
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Services</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in app_list %}
+      <tr>
+        <td>{{ app }}</td>
+        <td>
+          {% for service in services %}
+            {% if app in service.application %}
+              {{ service.service }}
+            {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div> <!-- container-->
 
 <!-- Modal -->
