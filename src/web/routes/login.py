@@ -14,6 +14,9 @@ ALGORITHM = "HS256"
 
 @login_page.route('/', methods=['GET'])
 def login():
+    if 'logged_in' in session:
+        # We're logged in so go to dashboard.
+        return redirect(url_for('dashboard_page.dashboard'))
     return render_template("login.html", header=False)
 
 

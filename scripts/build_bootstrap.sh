@@ -31,12 +31,12 @@ echo 'npm run dist does not minify our custom css so doing that'
 node_modules/.bin/cleancss -O1 --format breakWith=lf --source-map --source-map-inline-sources --output dist/css/custom_bootstrap.min.css dist/css/custom_bootstrap.css
 
 echo 'Copying compiled css'
-cp dist/css/custom_bootstrap.css.map ../../src/web/static/bootstrap/css/custom_bootstrap.min.css.map
-cp dist/css/custom_bootstrap.css ../../src/web/static/bootstrap/css/custom_bootstrap.min.css
+cp dist/css/custom_bootstrap.min.css.map ../../src/web/static/bootstrap/css/
+cp dist/css/custom_bootstrap.min.css ../../src/web/static/bootstrap/css/
 
 echo 'Copying compiled bundle js that includes popper'
-cp dist/js/bootstrap.bundle.min.js.map ../../src/web/static/bootstrap/js/bootstrap.bundle.min.js.map
-cp dist/js/bootstrap.bundle.min.js ../../src/web/static/bootstrap/js/bootstrap.bundle.min.js
+cp dist/js/bootstrap.bundle.min.js.map ../../src/web/static/bootstrap/js/
+cp dist/js/bootstrap.bundle.min.js ../../src/web/static/bootstrap/js/
 
 echo 'Downloading jquery'
 cd ..

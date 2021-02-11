@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, session, redirect, url_for
+from flask import Flask, session, redirect, url_for, request
 from flask_wtf.csrf import CSRFProtect
 from routes.login import login_page
 from routes.logout import logout_page
@@ -59,6 +59,18 @@ def check_session_expired():
             session.clear()
             # redirect to login page to clear session, which will redirect to login page.
             return redirect(url_for('logout_page.logout'))
+    elif 'login' in request.base_url:
+        # Ignore if /login
+        pass
+    elif 'static' in request.base_url:
+        # Ignore if /static/*
+        pass
+    elif 'favicon' in request.base_url:
+        # Ignore if /favicon.ico
+        pass
+    else:
+        # Redirect all unauthenticated requests to the login page.
+        return redirect(url_for('login_page.login'))
 
 
 @app.template_filter()
