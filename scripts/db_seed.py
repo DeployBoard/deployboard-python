@@ -37,22 +37,27 @@ def create_account():
     return insert_resp.inserted_id
 
 
-def create_user(user_role):
+def create_user(user_role, enabled):
     """
     Creates our first user.
     """
     # Log for debugging.
     logger.debug(f"creating user for: {user_role}")
+    # Set our email.
+    if enabled:
+        email = f"{user_role.lower()}@example.com"
+    else:
+        email = f"disabled{user_role.lower()}@example.com"
     # Define our user.
     user_dict = {
         "schema_version": 1.0,
         "account": "Example",
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",  # "secret"
-        "email": f"{user_role.lower()}@example.com",
+        "email": email,
         "role": user_role,
         "first_name": "John",
         "last_name": "Doe",
-        "enabled": True,
+        "enabled": enabled,
         "created_timestamp": 1610053395,
         "modified_timestamp": 1610053395,
         "modified_by": "admin@example.com"
@@ -225,8 +230,10 @@ def seed():
 
     # Create a user and api key for each role.
     for role in ["Viewer", "Editor", "Admin"]:
-        # Create the user.
-        users_dict[role] = create_user(role)
+        # Create the enabled users.
+        users_dict[role] = create_user(role, True)
+        # Create the disabled users.
+        users_dict[f"disabled{role}"] = create_user(role, False)
         # Create the api key.
         api_keys_dict[role] = create_api_key(role)
 
