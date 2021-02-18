@@ -2,18 +2,18 @@ import os
 import logging
 from flask import Flask, session, redirect, url_for, request
 from flask_wtf.csrf import CSRFProtect
-from routes.login import login_page
-from routes.logout import logout_page
-from routes.dashboard import dashboard_page
-from routes.ci import ci_page
-from routes.applications import applications_page
-from routes.logs import logs_page
-from routes.analytics import analytics_page
-from routes.users import users_page
-from routes.apikeys import apikeys_page
-from routes.integrations import integrations_page
-from routes.billing import billing_page
-from routes.environments import environments_page
+from webroutes.login import login_page
+from webroutes.logout import logout_page
+from webroutes.dashboard import dashboard_page
+from webroutes.ci import ci_page
+from webroutes.applications import applications_page
+from webroutes.logs import logs_page
+from webroutes.analytics import analytics_page
+from webroutes.users import users_page
+from webroutes.apikeys import apikeys_page
+from webroutes.integrations import integrations_page
+from webroutes.billing import billing_page
+from webroutes.environments import environments_page
 from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
@@ -52,13 +52,15 @@ def check_session_expired():
     """ Checks if session is expired """
     # If user is logged in.
     if 'logged_in' in session:
-        # If session is not expired.
-        # TODO: Remove this when refresh token is in place, we also need to apply this to all routes, not just index
-        if session['exp'] < datetime.now().timestamp():
-            # Clear the user's session.
-            session.clear()
-            # redirect to login page to clear session, which will redirect to login page.
-            return redirect(url_for('logout_page.logout'))
+        # Check if we have exp in session.
+        if 'exp' not in session:
+            # If session is not expired.
+            # TODO: Remove this when refresh token is in place
+            if session['exp'] < datetime.now().timestamp():
+                # Clear the user's session.
+                session.clear()
+                # redirect to login page to clear session, which will redirect to login page.
+                return redirect(url_for('logout_page.logout'))
     elif 'login' in request.base_url:
         # Ignore if /login
         pass

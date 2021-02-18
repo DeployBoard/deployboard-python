@@ -52,3 +52,14 @@ def apikey(admin_token):
     response = client.post("/apikeys/", headers={"Authorization": admin_token}, json=body)
     resp = response.json()
     return resp['_id']
+
+
+@pytest.fixture(scope="session")
+def service(admin_token):
+    body = {
+        "application": "Test",
+        "service": "Fixture"
+    }
+    response = client.put("/services/", headers={"Authorization": admin_token}, json=body)
+    resp = response.json()
+    return resp['_id']

@@ -16,4 +16,12 @@ Start the app.
 
 ## Development
 
+Virtual Environment
+
+`python3 -m venv venv`
+
+`source venv/bin/activate`
+
+Start the app via docker.
+
 `docker-compose up -d`
