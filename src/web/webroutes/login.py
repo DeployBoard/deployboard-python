@@ -15,7 +15,7 @@ ALGORITHM = "HS256"
 @login_page.route('/', methods=['GET'])
 def login():
     if 'logged_in' in session:
-        # We're logged in so go to dashboard.
+        logger.debug("User logged_in so go to dashboard.")
         return redirect(url_for('dashboard_page.dashboard'))
     return render_template("login.html", header=False)
 
@@ -36,7 +36,7 @@ def login_post():
         )
         logger.debug(f'response: {response.status_code}')
         if response.status_code == 401:
-            return render_template("login.html", header=False, error='Invalid Username or Password')
+            return render_template("login.html", header=False, error='Invalid Username or Password'), 401
 
         token = response.json()['access_token']
         logger.debug(f'token: {token}')

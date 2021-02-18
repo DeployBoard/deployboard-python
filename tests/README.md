@@ -9,5 +9,5 @@ Then run the container passing in the entire repo.
 
 ```
 docker build --no-cache -t deployboard-pytest:latest -f tests/Dockerfile .
-docker run --rm -it -v ${PWD}:/app -e PYTHONPATH=/app/:/app/src/:/app/src/api/ -e MONGO_URI=localhost:27017 -e APP_SECRET=changeme --network="host" deployboard-pytest
+docker run --rm -it -v ${PWD}:/app -e PYTHONPATH=/app/:/app/src/:/app/src/api/:/app/src/web/ -e MONGO_URI=localhost:27017 -e APP_SECRET=changeme --network="host" deployboard-pytest
 ```

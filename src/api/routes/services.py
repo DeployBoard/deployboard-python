@@ -99,6 +99,8 @@ async def create_service(body: NewService, current_user: User = Depends(get_curr
     except Exception as e:
         # Log our exception for debugging.
         logger.error(f"e: {e}")
+        # Raise exception if failed to insert.
+        raise HTTPException(status_code=500, detail="Unexpected error occurred.")
 
     return {'_id': str(resp.inserted_id)}
 
@@ -125,6 +127,8 @@ async def update_service(body: Service, current_user: User = Depends(get_current
     except Exception as e:
         # Log our exception for debugging.
         logger.error(f"e: {e}")
+        # Raise exception if failed to insert.
+        raise HTTPException(status_code=500, detail="Unexpected error occurred.")
 
     return response
 

@@ -26,24 +26,25 @@ class ServiceVersion(BaseModel):
 
 
 class NewService(CustomBaseModel):
-    account: str = None
-    service: str = None
-    application: str = None
+    service: str
+    application: str
 
     class Config:
         schema_extra = {
             "example": {
                 "schema_version": 1.0,
-                "account": "DeployBoard",
                 "service": "API",
-                "application": "DeployBoard"
+                "application": "DeployBoard",
+                "tags": [],
+                "versions": []
             }
         }
 
 
 class Service(NewService):
-    tags: Optional[List[str]] = None
-    versions: Optional[List[ServiceVersion]] = None
+    account: str
+    tags: Optional[List[str]] = []
+    versions: Optional[List[ServiceVersion]] = []
 
     class Config:
         schema_extra = {
