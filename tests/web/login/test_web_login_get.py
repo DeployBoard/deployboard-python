@@ -18,7 +18,6 @@ def test_web_login_get_logged_in(client):
         session['exp'] = 999999999999999
     response = client.get('/login/', follow_redirects=False)
     assert response.status_code == 302
-    # assert request.path == url_for('dashboard_page.dashboard')
     assert urlparse(response.location).path == url_for('dashboard_page.dashboard')
 
 
