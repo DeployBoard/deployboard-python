@@ -43,8 +43,7 @@ def index():
     if 'logged_in' in session:
         # We're logged in so go to dashboard.
         return redirect(url_for('dashboard_page.dashboard'))
-    # We're not logged in so go to login page.
-    return redirect(url_for('login_page.login'))
+    # We're not logged in so app.before_request will send us to login page.
 
 
 @app.before_request
@@ -53,7 +52,7 @@ def check_session_expired():
     # If user is logged in.
     if 'logged_in' in session:
         # Check if we have exp in session.
-        if 'exp' not in session:
+        if 'exp' in session:
             # If session is not expired.
             # TODO: Remove this when refresh token is in place
             if session['exp'] < datetime.now().timestamp():
@@ -66,9 +65,6 @@ def check_session_expired():
         pass
     elif 'static' in request.base_url:
         # Ignore if /static/*
-        pass
-    elif 'favicon' in request.base_url:
-        # Ignore if /favicon.ico
         pass
     else:
         # Redirect all unauthenticated requests to the login page.
@@ -106,7 +102,7 @@ def inject_theme():
     return dict(theme=theme)
 
 
-@app.route('/settings', methods=['GET'])
+@app.route('/settings', methods=['GET'], strict_slashes=False)
 def settings():
     return redirect(url_for('users_page.users'))
 
