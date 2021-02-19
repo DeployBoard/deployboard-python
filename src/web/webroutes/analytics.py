@@ -46,14 +46,11 @@ def analytics():
     # Log our query string dict for debugging.
     logger.debug(f"query_string_dict: {query_string_dict}")
     # Get data from our logs api endpoint.
-    logs_response = requests.get(
-        f'http://api:8081/logs?{query_string}',
-        headers={'Authorization': f'Bearer {session["token"]}'}
-    )
+    logs_response = get_logs(query_string, session['token'])
     # Log our response for debugging.
-    logger.debug(f"logs response: {logs_response.json()}")
+    logger.debug(f"logs response: {logs_response}")
     # Set our versions variable that we will pass into the template.
-    logs_data = logs_response.json()
+    logs_data = logs_response
 
 
     # Generate our daily_deploy_data dict for the graph.
@@ -112,14 +109,12 @@ def analytics():
 
 
     # Get data from our services api endpoint for search options.
-    services_response = requests.get(
-        f'http://api:8081/services',
-        headers={'Authorization': f'Bearer {session["token"]}'}
-    )
+    services_response = get_services(session['token'])
+
     # Log our response for debugging.
-    logger.debug(f"services response: {services_response.json()}")
+    logger.debug(f"services response: {services_response}")
     # Set our versions variable that we will pass into the template.
-    services_data = services_response.json()
+    services_data = services_response
     # Instantiate our empty lists.
     applications = []
     services = []
@@ -164,4 +159,37 @@ def analytics_search():
         query_params['daysago'] = request.form['daysago']
     # Return the logs page with our query string parameters from request form.
     return redirect(url_for('analytics_page.analytics', **query_params))
- 
+
+
+def get_logs(query_string, token):
+    try:
+        response = requests.get(
+            f'http://api:8081/logs?{query_string}',
+            headers={'Authorization': f'Bearer {token}'}
+        )
+        # Log our response for debugging.
+        logger.debug(f"response: {response.json()}")
+    except Exception as error:
+        # Log error for debugging.
+        logger.error(f"error: {error}")
+        # Re-raise the same error.
+        raise
+
+    return response.json()
+
+
+def get_services(token):
+    try:
+        response = requests.get(
+            f'http://api:8081/services',
+            headers={'Authorization': f'Bearer {token}'}
+        )
+        # Log our response for debugging.
+        logger.debug(f"response: {response.json()}")
+    except Exception as error:
+        # Log error for debugging.
+        logger.error(f"error: {error}")
+        # Re-raise the same error.
+        raise
+
+    return response.json()
