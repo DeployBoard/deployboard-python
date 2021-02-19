@@ -16,6 +16,11 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   </head>
   <body class="site bg-{{ theme }}">
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    {% endif %}
     {% if header != False %}
       {% include "header.html" %}
     {% endif %}
