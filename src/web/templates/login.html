@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 
 {% block body %}
+
 <div class="h-100 d-flex justify-content-center align-items-center">
     <img src="{{ url_for('static', filename='images/rocket-transparent-256px.png') }}" class="img-responsive inline-block pr-3" alt="DeployBoard Logo" />
     <form action="" class="form-signin pl-3" method="post">
-        {% if error %}
-          <p align="center" class="error"><strong>Error:</strong> {{ error }}</p>
-        {% endif %}
         <input type="email" class="form-control" placeholder="Email Address" name="email" value="{{ request.form.email }}" required autofocus>
         <input type="password" class="form-control mt-2" placeholder="Password" name="password" value="{{ request.form.password }}" required>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -14,6 +12,5 @@
         <input class="btn btn-primary btn-block" type="submit" value="Login">
     </form>
 </div>
-
 
 {% endblock %}

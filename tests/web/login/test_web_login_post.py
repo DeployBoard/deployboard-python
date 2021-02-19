@@ -68,4 +68,4 @@ def test_web_login_post_exception(mock_post, client, admin_username, password):
     ), follow_redirects=True)
     assert response.status_code == 200
     assert request.path == url_for('login_page.login')
-    assert b'error' in response.data
+    assert b'alert' in response.data
