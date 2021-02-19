@@ -19,9 +19,9 @@ def applications():
     # Get data from our services api endpoint.
     response = get_services(session['token'])
     # Log our response for debugging.
-    logger.debug(f"services response: {response.json()}")
+    logger.debug(f"services response: {response}")
     # Set our versions variable that we will pass into the template.
-    services = response.json()
+    services = response
     # Instantiate our app_list
     app_list = []
     # Sort get unique applications from our services.
