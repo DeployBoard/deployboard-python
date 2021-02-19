@@ -17,10 +17,7 @@ def applications():
     Queries our services api endpoint then passes that data into the applications template
     """
     # Get data from our services api endpoint.
-    response = requests.get(
-        'http://api:8081/services',
-        headers={'Authorization': f'Bearer {session["token"]}'}
-    )
+    response = get_services(session['token'])
     # Log our response for debugging.
     logger.debug(f"services response: {response.json()}")
     # Set our versions variable that we will pass into the template.
@@ -52,14 +49,12 @@ def add_application():
     # Log our application name for debugging
     logger.debug(f'application_name: {application_name}')
     # Get data from our services api endpoint.
-    response = requests.get(
-        'http://api:8081/services',
-        headers={'Authorization': f'Bearer {session["token"]}'}
-    )
+    # TODO: This needs to be a post, but is not ready yet.
+    response = get_services(session['token'])
     # Log our response for debugging.
-    logger.debug(f"services response: {response.json()}")
+    logger.debug(f"services response: {response}")
     # Set our versions variable that we will pass into the template.
-    services = response.json()
+    services = response
     # Instantiate our app_list
     app_list = []
     # Sort get unique applications from our services.
@@ -72,3 +67,20 @@ def add_application():
     logger.debug(f"app_list: {app_list}")
     # Return our template.
     return render_template("applications.html", app_list=app_list, services=services)
+
+
+def get_services(token):
+    try:
+        response = requests.get(
+            f'http://api:8081/services/',
+            headers={'Authorization': f'Bearer {token}'}
+        )
+        # Log our response for debugging.
+        logger.debug(f"deployments response: {response.json()}")
+    except Exception as error:
+        # Log error for debugging.
+        logger.error(f"deployments error: {error}")
+        # Re-raise the same error.
+        raise
+
+    return response.json()
