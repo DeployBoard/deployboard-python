@@ -9,15 +9,13 @@ ENV PYTHONPATH=/app/:/app/src/:/app/src/api/:/app/src/web/
 # set the working directory in the container
 WORKDIR /app
 
-# copy the application dependencies files to the working directory
-COPY src/api/requirements.txt ./api-requirements.txt
-COPY src/web/requirements.txt ./web-requirements.txt
-COPY tests/requirements.txt ./test-requirements.txt
+# copy the source into the working directory
+COPY . .
 
 # install dependencies
-RUN pip install -r api-requirements.txt
-RUN pip install -r web-requirements.txt
-RUN pip install -r test-requirements.txt
+RUN pip install -r src/api/requirements.txt
+RUN pip install -r src/web/requirements.txt
+RUN pip install -r tests/requirements.txt
 
 # command to run on container start
 CMD [ "pytest", "--cov-report", "html", "--cov-report", "xml", "--cov-report", "term", "--cov=src/", "tests/" ]
