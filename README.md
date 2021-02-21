@@ -5,6 +5,9 @@
   DeployBoard is a simple deployment tracking tool. Easily plugs in to any deployment tool or pipeline. Tracks DORA metrics, compliance, and more.
 </p>
 <p align="center">
+  <a href="https://github.com/DeployBoard/deployboard/actions?query=workflow%3ATest+branch%3Amain" target="_blank">
+    <img src="https://github.com/DeployBoard/deployboard/workflows/Test/badge.svg" alt="Test">
+  </a>
   <a href="https://codecov.io/gh/DeployBoard/deployboard" target="_blank">
     <img src="https://codecov.io/gh/DeployBoard/deployboard/branch/main/graph/badge.svg" alt="Coverage">
   </a>
