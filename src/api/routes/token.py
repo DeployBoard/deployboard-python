@@ -6,7 +6,7 @@ from models.users import User
 
 from datetime import datetime, timedelta
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 480  # 8 hours
 
 router = APIRouter(
     tags=["Auth"],
