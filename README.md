@@ -1,10 +1,10 @@
-<p style="text-align: center;">
+<p align="center">
   <a href="https://www.deployboard.io"><img src="https://user-images.githubusercontent.com/7454248/108596582-f253f380-7353-11eb-838d-18f44478a67a.png" alt="DeployBoard"></a>
 </p>
-<p style="text-align: center;">
+<p align="center">
   DeployBoard is a simple deployment tracking tool. Easily plugs in to any deployment tool or pipeline. Tracks DORA metrics, compliance, and more.
 </p>
-<p style="text-align: center;">
+<p align="center">
   <a href="https://github.com/DeployBoard/deployboard/actions?query=workflow%3ATest+branch%3Amain" target="_blank">
     <img src="https://github.com/DeployBoard/deployboard/workflows/Test/badge.svg" alt="Test">
   </a>
