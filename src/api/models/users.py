@@ -9,6 +9,8 @@ class User(CustomBaseModel):
     role: str = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
+    avatar: Optional[str] = None
+    theme: Optional[str] = None
     enabled: bool = True
 
     class Config:
@@ -87,7 +89,7 @@ class CreateUser(CustomBaseModel):
         }
 
 
-class UpdateUser(CustomBaseModel):
+class UpdateUserAsAdmin(CustomBaseModel):
     _id: str = None
     email: Optional[EmailStr]
     role: Optional[str]
@@ -104,5 +106,22 @@ class UpdateUser(CustomBaseModel):
                 "first_name": "John",
                 "last_name": "Doe",
                 "enabled": False
+            }
+        }
+
+
+class UpdateUserAsSelf(BaseModel):
+    first_name: Optional[str]
+    last_name: Optional[str]
+    theme: Optional[str]
+    avatar: Optional[str]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "theme": "dark",
+                "avatar": "https://avatars.com/my_avatar.png"
             }
         }

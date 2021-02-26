@@ -1,6 +1,6 @@
 import logging
 from fastapi import FastAPI, Request
-from routes import token, deploy, services, logs, users, apikeys, environments
+from routes import token, deploy, services, logs, users, me, apikeys, environments
 import time
 
 
@@ -27,5 +27,6 @@ app.include_router(deploy.router)
 app.include_router(services.router)
 app.include_router(logs.router)
 app.include_router(users.router)
+app.include_router(me.router)
 app.include_router(apikeys.router)
 app.include_router(environments.router)
