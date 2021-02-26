@@ -68,7 +68,7 @@ async def get_user(_id, current_user: User = Depends(get_current_active_user)):
     return validated_user
 
 
-@router.post("/")
+@router.put("/")
 async def create_user(user: CreateUser, current_user: User = Depends(get_current_active_user)):
     """
     Creates a new user
@@ -104,6 +104,8 @@ async def create_user(user: CreateUser, current_user: User = Depends(get_current
     # Return the inserted user id.
     return {'_id': str(resp.inserted_id)}
 
+
+# TODO: Create a post route that updates existing user: update_user()
 
 @router.delete("/{_id}")
 async def delete_user(_id, current_user: User = Depends(get_current_active_user)):

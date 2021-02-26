@@ -38,7 +38,7 @@ def user(admin_token):
         "email": "pytestuser@example.com",
         "role": "Viewer"
     }
-    response = client.post("/users/", headers={"Authorization": admin_token}, json=body)
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     resp = response.json()
     return resp['_id']
 
@@ -49,7 +49,7 @@ def apikey(admin_token):
         "name": "pytest-api-key",
         "role": "Editor"
     }
-    response = client.post("/apikeys/", headers={"Authorization": admin_token}, json=body)
+    response = client.put("/apikeys/", headers={"Authorization": admin_token}, json=body)
     resp = response.json()
     return resp['_id']
 
