@@ -19,7 +19,7 @@ def test_get_environments_bad_token():
     assert response.json() == {"detail": "Not authenticated"}
 
 
-# @pytest.mark.skip(reason="The Mock is not triggering the exception.")
+# TODO: This is working, but it's not covering the code in the report.
 @patch("db.mongo.db.accounts")
 def test_get_environments_exception(mock_db, admin_token):
     mock_db.side_effect = Exception('ConnectionFailure')
