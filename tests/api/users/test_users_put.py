@@ -5,16 +5,16 @@ from api.main import app
 client = TestClient(app)
 
 
-# POST /users/
+# PUY /users/
 def test_create_user_valid_user(admin_token):
     body = {
         "email": "jdoe999@example.com",
         "role": "Editor"
     }
-    post_response = client.post("/users/", headers={"Authorization": admin_token}, json=body)
-    assert post_response.status_code == 200
-    assert '_id' in post_response.json()
-    get_response = client.get(f"/users/{post_response.json()['_id']}", headers={"Authorization": admin_token})
+    put_response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
+    assert put_response.status_code == 200
+    assert '_id' in put_response.json()
+    get_response = client.get(f"/users/{put_response.json()['_id']}", headers={"Authorization": admin_token})
     assert get_response.status_code == 200
     assert '_id' in get_response.json()
     assert 'schema_version' in get_response.json()
@@ -31,14 +31,14 @@ def test_create_user_existing_user(admin_token):
         "email": "viewer@example.com",
         "role": "Editor"
     }
-    response = client.post("/users/", headers={"Authorization": admin_token}, json=body)
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert response.status_code == 400
     assert response.json() == {'detail': 'User already exists, may be associated with another account.'}
 
 
 def test_create_user_empty_body(admin_token):
     body = {}
-    response = client.post("/users/", headers={"Authorization": admin_token}, json=body)
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert response.status_code == 422
     assert response.json()['detail'][0]['loc'] == ["body", "email"]
     assert response.json()['detail'][0]['msg'] == "field required"
@@ -50,7 +50,7 @@ def test_create_user_empty_body(admin_token):
 
 def test_create_user_invalid_body_missing_role(admin_token):
     body = {"email": "test@example.com"}
-    response = client.post("/users/", headers={"Authorization": admin_token}, json=body)
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert response.status_code == 422
     assert response.json()['detail'][0]['loc'] == ["body", "role"]
     assert response.json()['detail'][0]['msg'] == "field required"
@@ -59,7 +59,7 @@ def test_create_user_invalid_body_missing_role(admin_token):
 
 def test_create_user_invalid_body_missing_email(admin_token):
     body = {"role": "Viewer"}
-    response = client.post("/users/", headers={"Authorization": admin_token}, json=body)
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert response.status_code == 422
     assert response.json()['detail'][0]['loc'] == ["body", "email"]
     assert response.json()['detail'][0]['msg'] == "field required"
@@ -67,7 +67,7 @@ def test_create_user_invalid_body_missing_email(admin_token):
 
 
 def test_create_user_bad_token():
-    response = client.post("/users/", headers={"Authorization": "bad-token"})
+    response = client.put("/users/", headers={"Authorization": "bad-token"})
     assert response.status_code == 401
     assert response.json() == {"detail": "Not authenticated"}
 
@@ -77,6 +77,6 @@ def test_create_user_invalid_role(viewer_token, seed_data):
         "email": "viewer@example.com",
         "role": "Editor"
     }
-    response = client.post("/users/", headers={"Authorization": viewer_token}, json=body)
+    response = client.put("/users/", headers={"Authorization": viewer_token}, json=body)
     assert response.status_code == 401
     assert response.json() == {"detail": "Unauthorized"}

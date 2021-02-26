@@ -58,7 +58,7 @@ async def get_apikey(_id, current_user: User = Depends(get_current_active_user))
     return key
 
 
-@router.post("/")
+@router.put("/")
 async def create_apikey(apikey: CreateApiKey, current_user: User = Depends(get_current_active_user)):
     """
     Creates a new api key
