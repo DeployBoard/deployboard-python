@@ -1,10 +1,7 @@
-import pytest
 from unittest.mock import patch
-from src.web.webroutes.dashboard import get_api
 
 
-# TODO: This test could be better.
-@patch('webroutes.dashboard.get_api')
+@patch('requests.get')
 def test_web_dashboard_get_success(mock, client, admin_token):
     mock.return_value.json.return_value = [
         {
@@ -37,9 +34,10 @@ def test_web_dashboard_get_success(mock, client, admin_token):
     response = client.get('/dashboard/')
     assert response.status_code == 200
     assert b'Dashboard' in response.data
+    assert b'Admin' in response.data
 
 
-@patch('webroutes.dashboard.get_api', side_effect=Exception('mocked error'))
+@patch('requests.get', side_effect=Exception('mocked error'))
 def test_dashboard_get_services_exception(mock, client, admin_token):
     with client.session_transaction() as session:
         session['logged_in'] = True
@@ -48,18 +46,3 @@ def test_dashboard_get_services_exception(mock, client, admin_token):
     response = client.get('/dashboard/')
     assert response.status_code == 500
     assert b'mocked error' in response.data
-
-
-@patch('requests.get')
-def test_dashboard_get_api_success(mock, admin_token):
-    mock.return_value.status_code = 200
-    mock.return_value.json.return_value = []
-    response = get_api('services', admin_token)
-    assert response == []
-
-
-@patch('requests.get', side_effect=Exception('mocked error'))
-def test_dashboard_get_api_exception(mock, admin_token):
-    with pytest.raises(Exception) as excinfo:
-        get_api('services', admin_token)
-    assert str(excinfo.value) == 'mocked error'

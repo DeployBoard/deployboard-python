@@ -1,13 +1,9 @@
-import os
 import logging
-import requests
 from flask import Blueprint, render_template, session
+from webutil.webapi import get_api
 
 dashboard_page = Blueprint('dashboard_page', __name__)
-
 logger = logging.getLogger(__name__)
-
-SECRET_KEY = os.environ['APP_SECRET']
 
 
 @dashboard_page.route('/')
@@ -26,23 +22,3 @@ def dashboard():
 
     # Return our template.
     return render_template("dashboard.html", services=services, environments=environments)
-
-
-def get_api(route, token):
-    """
-    Query api endpoint and return response.
-    """
-    try:
-        response = requests.get(
-            f'http://api:8081/{route}',
-            headers={'Authorization': f'Bearer {token}'}
-        )
-        # Log our response for debugging.
-        logger.debug(f"deployments response: {response.json()}")
-    except Exception as error:
-        # Log error for debugging.
-        logger.error(f"deployments error: {error}")
-        # Re-raise the same error.
-        raise
-
-    return response.json()
