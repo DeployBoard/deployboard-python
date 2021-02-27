@@ -1,9 +1,7 @@
-import pytest
 from unittest.mock import patch
-from webutil.webapi import get_api
 
 
-@patch('webutil.webapi.get_api')
+@patch('requests.get')
 def test_web_dashboard_get_success(mock, client, admin_token):
     mock.return_value.json.return_value = [
         {
@@ -36,9 +34,10 @@ def test_web_dashboard_get_success(mock, client, admin_token):
     response = client.get('/dashboard/')
     assert response.status_code == 200
     assert b'Dashboard' in response.data
+    assert b'Admin' in response.data
 
 
-@patch('webutil.webapi.get_api', side_effect=Exception('mocked error'))
+@patch('requests.get', side_effect=Exception('mocked error'))
 def test_dashboard_get_services_exception(mock, client, admin_token):
     with client.session_transaction() as session:
         session['logged_in'] = True

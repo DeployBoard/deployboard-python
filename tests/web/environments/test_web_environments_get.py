@@ -1,9 +1,7 @@
-import pytest
 from unittest.mock import patch
-from webutil.webapi import get_api
 
 
-@patch('webutil.webapi.get_api')
+@patch('requests.get')
 def test_web_environments_get_success(mock, client, admin_token):
     mock.return_value.json.return_value = ["Prod, Test, Dev"]
     with client.session_transaction() as session:
@@ -16,8 +14,8 @@ def test_web_environments_get_success(mock, client, admin_token):
     assert b'Prod' in response.data
 
 
-@patch('webutil.webapi.get_api', side_effect=Exception('mocked error'))
-def test_environments_get_services_exception(mock, client, admin_token):
+@patch('requests.get', side_effect=Exception('mocked error'))
+def test_environments_get_exception(mock, client, admin_token):
     with client.session_transaction() as session:
         session['logged_in'] = True
         session['exp'] = 999999999999999
