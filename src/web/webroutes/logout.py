@@ -2,7 +2,6 @@ import logging
 from flask import Blueprint, session, redirect, url_for
 
 logout_page = Blueprint('logout_page', __name__)
-
 logger = logging.getLogger(__name__)
 
 

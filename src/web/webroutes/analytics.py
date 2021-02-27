@@ -1,4 +1,3 @@
-import os
 import logging
 import requests
 from datetime import datetime, timedelta
@@ -8,9 +7,6 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 analytics_page = Blueprint('analytics_page', __name__)
 
 logger = logging.getLogger(__name__)
-
-SECRET_KEY = os.environ['APP_SECRET']
-ALGORITHM = "HS256"
 
 
 @analytics_page.route('/', methods=['GET'])

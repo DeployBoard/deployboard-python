@@ -1,14 +1,9 @@
-import os
 import logging
 import requests
 from flask import Blueprint, render_template, request, session, redirect, url_for
 
 applications_page = Blueprint('applications_page', __name__)
-
 logger = logging.getLogger(__name__)
-
-SECRET_KEY = os.environ['APP_SECRET']
-ALGORITHM = "HS256"
 
 
 @applications_page.route('/', methods=['GET'])
