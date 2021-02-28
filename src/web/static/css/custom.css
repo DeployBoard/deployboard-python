@@ -26,7 +26,6 @@ td {
     border-top: 1px solid #9fcdff;
     border-bottom: 1px solid #9fcdff;
     padding: 15px;
-    background-color: white;
 }
 tbody tr:hover td {
     border-top: 1px solid #3f79b5;
