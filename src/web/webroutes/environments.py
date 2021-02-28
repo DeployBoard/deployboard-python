@@ -16,7 +16,7 @@ def environments():
         response = get_api('environments', session['token'])
     except Exception as error:
         # Return our template with an error.
-        return render_template("dashboard.html", error=error), 500
+        return render_template("dashboard.html", error=error)
 
     # Return our template.
     return render_template("environments.html", environments=response)
