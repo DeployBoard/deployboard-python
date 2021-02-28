@@ -5,7 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Custom Compiled Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/custom_bootstrap.min.css') }}">
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/custom_bootstrap.min.css') }}">#}
+    {% if theme == 'darker' %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-darker.min.css') }}">
+    {% elif theme == 'dark' %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-dark.min.css') }}">
+    {% elif theme == 'slate' %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-slate.min.css') }}">
+    {% elif theme == 'bluish' %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-bluish.min.css') }}">
+    {% else %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-light.min.css') }}">
+    {% endif %}
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     <!-- Optional JavaScript -->
@@ -15,7 +26,7 @@
     <title>DeployBoard</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   </head>
-  <body class="site bg-{{ theme }}">
+  <body class="site">
     {% if error %}
     <div class="alert alert-danger" role="alert">
       {{ error }}

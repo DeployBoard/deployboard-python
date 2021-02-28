@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+  <div class="d-inline">
+    <h2 class="float-left">Me</h2>
+  </div>
+</div>
+
+{% if me %}
+<div class="container w-50">
+  <form class="form" method="post">
+    <label for="first_name">First Name:</label>
+    <input class="form-control m-1 mr-2" id="first_name" name="first_name" aria-describedby="firstName" value="{{ me.first_name }}"/>
+    <label for="last_name">Last Name:</label>
+    <input class="form-control m-1 mr-2" id="last_name" name="last_name" aria-describedby="lastName" value="{{ me.last_name }}"/>
+    <label for="avatar">Avatar:</label>
+    <input class="form-control m-1 mr-2" id="avatar" name="avatar" aria-describedby="avatar" value="{{ me.avatar }}"/>
+    <label for="theme">Theme:</label>
+    <select class="custom-select my-1 mr-sm-2" id="theme" name="theme" aria-describedby="theme">
+      <option value="light" {% if theme == 'light' %}selected{% endif %}>Light</option>
+      <option value="bluish" {% if theme == 'bluish' %}selected{% endif %}>Bluish</option>
+      <option value="slate" {% if theme == 'slate' %}selected{% endif %}>Slate</option>
+      <option value="dark" {% if theme == 'dark' %}selected{% endif %}>Dark</option>
+      <option value="darker" {% if theme == 'darker' %}selected{% endif %}>Darker</option>
+    </select>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input class="btn btn-primary" type="submit" value="Submit">
+  </form>
+</div>
+{% endif %}
+
+{% endblock %}

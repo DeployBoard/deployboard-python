@@ -9,11 +9,13 @@ from webroutes.ci import ci_page
 from webroutes.applications import applications_page
 from webroutes.logs import logs_page
 from webroutes.analytics import analytics_page
+from webroutes.me import me_page
 from webroutes.users import users_page
 from webroutes.apikeys import apikeys_page
 from webroutes.integrations import integrations_page
 from webroutes.billing import billing_page
 from webroutes.environments import environments_page
+from webutil.webapi import get_api
 from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
@@ -30,6 +32,7 @@ app.register_blueprint(ci_page, url_prefix='/ci')
 app.register_blueprint(applications_page, url_prefix='/applications')
 app.register_blueprint(logs_page, url_prefix='/logs')
 app.register_blueprint(analytics_page, url_prefix='/analytics')
+app.register_blueprint(me_page, url_prefix='/me')
 app.register_blueprint(users_page, url_prefix='/settings/users')
 app.register_blueprint(apikeys_page, url_prefix='/settings/apikeys')
 app.register_blueprint(integrations_page, url_prefix='/settings/integrations')
@@ -71,6 +74,24 @@ def check_session_expired():
         return redirect(url_for('login_page.login'))
 
 
+@app.before_request
+def get_me_info():
+    """
+    Queries our me api endpoint then passes that data into the me template
+    """
+    try:
+        # Get data from our me api endpoint.
+        response = get_api('me/', session['token'])
+        # Set session from response.
+        session['theme'] = response['theme']
+        # Set account from response.
+        session['account'] = response['account']
+    except Exception as error:
+        # For now we just pass on without doing anything. We'll let the destination route throw error if that endpoint
+        # is unable to load. This may change in the future.
+        pass
+
+
 @app.template_filter()
 def epoch_to_date(epoch):
     """ Converts epoch to timezone in user's profile """
@@ -94,10 +115,6 @@ def inject_theme():
         # If theme in session, use the theme.
         theme = session['theme']
     else:
-        theme = 'light'
-    # Check that theme is either light or dark, in case someone manually changed session.
-    if theme not in ['light', 'dark']:
-        # Default to light.
         theme = 'light'
     return dict(theme=theme)
 
