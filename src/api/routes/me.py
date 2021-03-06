@@ -1,11 +1,8 @@
 import logging
-from datetime import datetime
-from typing import List
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 from util.auth import get_current_active_user
-from util.response import check_response
-from models.users import UpdateUserAsSelf, User, UserResponse, UserInDB
+from models.users import UpdateUserAsSelf, User, UserResponse
 from db.mongo import db
 
 logger = logging.getLogger(__name__)
