@@ -3,10 +3,10 @@ services:
   db:
     image: mongo:4
     restart: always
-    ports:
-      - 27017:27017
     volumes:
       - db-data:/data/db
+    ports:
+      - 27017:27017
     networks:
       - backend-network
 
@@ -43,6 +43,14 @@ services:
       - FLASK_APP=web
       - FLASK_HOST=0.0.0.0
       - FLASK_PORT=8080
+
+  docs:
+    image: squidfunk/mkdocs-material:latest
+    restart: always
+    volumes:
+      - ./docs:/docs
+    ports:
+      - 8000:8000
 
 volumes:
   db-data:
