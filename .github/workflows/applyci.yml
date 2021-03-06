@@ -28,7 +28,7 @@ jobs:
           ECR_REPOSITORY: dpb-ci-web
           IMAGE_TAG: ${{ github.event.number }}
         run: |
-          docker build --no-cache -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f docs/Dockerfile .
+          docker build --no-cache -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f src/web/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Build and Push Api to Amazon ECR
@@ -37,7 +37,7 @@ jobs:
           ECR_REPOSITORY: dpb-ci-api
           IMAGE_TAG: ${{ github.event.number }}
         run: |
-          docker build --no-cache -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f docs/Dockerfile .
+          docker build --no-cache -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f src/api/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Build and Push Docs to Amazon ECR
