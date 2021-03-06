@@ -6,13 +6,13 @@
 </p>
 <p align="center">
   <a href="https://github.com/DeployBoard/deployboard/actions?query=workflow%3ATest+branch%3Amain" target="_blank">
-    <img src="https://github.com/DeployBoard/deployboard/workflows/Test/badge.svg" alt="Test">
+    <img src="https://github.com/DeployBoard/deployboard/workflows/Test/badge.svg" alt="Test" />
   </a>
   <a href="https://codecov.io/gh/DeployBoard/deployboard" target="_blank">
-    <img src="https://codecov.io/gh/DeployBoard/deployboard/branch/main/graph/badge.svg" alt="Coverage">
+    <img src="https://codecov.io/gh/DeployBoard/deployboard/branch/main/graph/badge.svg" alt="Coverage" />
   </a>
   <a href="https://lgtm.com/projects/g/DeployBoard/deployboard/context:python">
-    <img alt="Language grade: Python" src="https://img.shields.io/lgtm/grade/python/github/DeployBoard/deployboard?label=Quality&logo=lgtm&logoColor=lightblue"/>
+    <img src="https://img.shields.io/lgtm/grade/python/github/DeployBoard/deployboard?label=Quality&logo=lgtm&logoColor=lightblue" alt="Quality" />
   </a>
 </p>
 
