@@ -11,32 +11,29 @@
   <a href="https://codecov.io/gh/DeployBoard/deployboard" target="_blank">
     <img src="https://codecov.io/gh/DeployBoard/deployboard/branch/main/graph/badge.svg" alt="Coverage">
   </a>
+  <a href="https://lgtm.com/projects/g/DeployBoard/deployboard/context:python">
+    <img alt="Language grade: Python" src="https://img.shields.io/lgtm/grade/python/github/DeployBoard/deployboard?label=Quality&logo=lgtm&logoColor=lightblue"/>
+  </a>
 </p>
 
 ---
+
+## Features
 
 - Simple deployment tracking tool.
 - Easily plugs in to any deployment tool or pipeline.
 - Tracks DORA metrics, compliance, and more.
 
-## Deployment
+See the full set of <a href="https://docs.deployboard.io/features/" class="external-link" target="_blank">Features</a>.
 
-Build bootstrap with our custom scss from the root of this repository.
+## Documentation
 
-`bash scripts/build_bootstrap.sh`
+Docs are available at <a href="https://docs.deployboard.io/" class="external-link" target="_blank">docs.deployboard.io</a>.
 
-Start the app.
+## Contributing
 
-`docker-compose up -d`
+There are many ways to contribute.
 
-## Development
+Please see the guide to <a href="https://docs.deployboard.io/contributing/" class="external-link" target="_blank">Contributing</a> on our docs.
 
-Virtual Environment
-
-`python3 -m venv venv`
-
-`source venv/bin/activate`
-
-Start the app via docker.
-
-`docker-compose up -d`
+You can also <a href="https://docs.deployboard.io/help-deployboard/" class="external-link" target="_blank">Help DeployBoard</a> in other ways, without requiring any coding.
