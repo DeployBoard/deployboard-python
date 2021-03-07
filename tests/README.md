@@ -16,8 +16,8 @@ Then run the container volume mounting the entire repo.
 docker run --rm -it -v ${PWD}:/app deployboard-pytest
 ```
 
-If you want to run your tests against a real db, set the `DPB_ENV` environment variable, set the `MONGO_URI` environment variable, and add the `--network="host"` flag.
+If you want to run your tests against a real db, set the `MONGO_URI` environment variable, and add the `--network="host"` flag.
 
 ```
-docker run --rm -it -v ${PWD}:/app -e DPB_ENV=dev -e MONGO_URI=localhost:27017 --network="host" deployboard-pytest
+docker run --rm -it -v ${PWD}:/app -e MONGO_URI=localhost:27017 --network="host" deployboard-pytest
 ```

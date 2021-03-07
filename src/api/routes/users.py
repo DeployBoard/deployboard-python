@@ -5,7 +5,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 from util.auth import get_current_active_user, verify_role
 from util.response import check_response
-from models.users import CreateUser, User, UserResponse, UserInDB
+from models.users import CreateUser, User, UserResponse
 from db.mongo import db
 
 logger = logging.getLogger(__name__)

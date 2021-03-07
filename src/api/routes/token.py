@@ -1,8 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends, Form
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from util.auth import authenticate_user, create_access_token, get_current_active_user, verify_role
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+from util.auth import authenticate_user, create_access_token
 from models.auth import Token
-from models.users import User
 
 from datetime import datetime, timedelta
 

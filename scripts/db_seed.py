@@ -7,17 +7,17 @@ from pymongo import MongoClient
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# TODO: can we import the client from utils.mongo?
-#  Even if we can't or don't want to, we should use the MONGO_URI and make sure it's default to localhost
-# mongo_client = MongoClient(os.environ['MONGO_URI'])
-mongo_client = MongoClient("localhost:27017")
+# Get our mongo settings from environment
+mongo_uri = os.environ["MONGO_URI"] if "MONGO_URI" in os.environ else "localhost:27017"
+database = os.environ["MONGO_DATABASE"] if "MONGO_DATABASE" in os.environ else "deployboard"
+mongo_client = MongoClient(mongo_uri)
 
 # Check if our db exists.
-if "deployboard" in mongo_client.list_database_names():
+if database in mongo_client.list_database_names():
     # The db exists, so we will drop it.
-    mongo_client.drop_database('deployboard')
+    mongo_client.drop_database(database)
 # Creating a connection to a non-existent database will create it.
-db = mongo_client.deployboard
+db = mongo_client[database]
 
 
 def create_account():

@@ -1,0 +1,92 @@
+site_name: DeployBoard
+site_description: Measure the success of DevOps in your organization.
+site_url: https://docs.deployboard.io/
+docs_dir: src
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github-alt
+    logo: fontawesome/solid/rocket
+  favicon: img/favicon.png
+  language: en
+repo_name: DeployBoard/deployboard
+repo_url: https://github.com/DeployBoard/deployboard
+edit_uri: ''
+google_analytics:
+- UA-
+- auto
+plugins:
+- search
+nav:
+- DeployBoard: index.md
+- features.md
+- Usage:
+  - usage/index.md
+  - usage/dashboard.md
+  - usage/ci.md
+  - usage/applications.md
+  - usage/logs.md
+  - usage/analytics.md
+  - usage/me.md
+  - Settings:
+    - usage/settings/users.md
+    - usage/settings/apikeys.md
+    - usage/settings/integrations.md
+    - usage/settings/billing.md
+    - usage/settings/environments.md
+- Deployment:
+  - deployment/index.md
+  - deployment/configuration.md
+  - deployment/docker-hub.md
+  - deployment/docker-source.md
+  - deployment/kubernetes.md
+  - deployment/ecs.md
+  - deployment/standalone.md
+- Backups:
+  - backups/index.md
+- Upgrading:
+  - upgrading/index.md
+- security.md
+- people.md
+- history.md
+- external-links.md
+- help-deployboard.md
+- contributing.md
+- release-notes.md
+markdown_extensions:
+- toc:
+    permalink: true
+- markdown.extensions.codehilite:
+    guess_lang: false
+- admonition
+- codehilite
+- extra
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_div_format ''
+- pymdownx.tabbed
+extra:
+  social:
+  - icon: fontawesome/brands/github-alt
+    link: https://github.com/DeployBoard/deployboard
+  - icon: fontawesome/brands/twitter
+    link: https://twitter.com/deployboard
+  - icon: fontawesome/solid/globe
+    link: https://www.deployboard.io
+extra_javascript:
+- https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js

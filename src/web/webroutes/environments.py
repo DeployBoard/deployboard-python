@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, session
 from webutil.webapi import get_api
 
 environments_page = Blueprint('environments_page', __name__)

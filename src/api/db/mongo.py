@@ -1,10 +1,12 @@
-import os
+from util.config import config
 
-if 'DPB_ENV' in os.environ and os.environ['DPB_ENV'] == 'pytest':
+# If you pass mongo_uri we use that.
+if config["MONGO_URI"]:
+    from pymongo import MongoClient
+    client = MongoClient(config["MONGO_URI"])
+# Else we use inmemory. This is really just used for testing.
+else:
     from pymongo_inmemory import MongoClient
     client = MongoClient()
-else:
-    from pymongo import MongoClient
-    client = MongoClient(os.environ['MONGO_URI'])
 
-db = client.deployboard
+db = client[config["MONGO_DATABASE"]]

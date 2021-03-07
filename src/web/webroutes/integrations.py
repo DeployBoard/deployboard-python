@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template
 
 integrations_page = Blueprint('integrations_page', __name__)
 logger = logging.getLogger(__name__)

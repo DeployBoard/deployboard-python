@@ -1,6 +1,6 @@
 import logging
 import requests
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, session
 
 users_page = Blueprint('users_page', __name__)
 logger = logging.getLogger(__name__)

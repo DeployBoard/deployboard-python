@@ -2,7 +2,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from db.mongo import db
 from bson import ObjectId
-from models.logs import NewLog, Log, LogResponse
+from models.logs import LogResponse
 from models.users import User
 from util.auth import get_current_active_user, verify_role
 

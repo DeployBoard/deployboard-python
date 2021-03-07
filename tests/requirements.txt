@@ -7,4 +7,4 @@ pytest-cov==2.11.1
 pytest-order==0.9.3
 
 # MongoDB - In memory for tests
-pymongo_inmemory==0.1.4
+pymongo_inmemory==0.1.5
