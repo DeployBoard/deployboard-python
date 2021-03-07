@@ -4,8 +4,8 @@ FROM python:3.8
 # set the working directory in the container
 WORKDIR /app
 
-# copy the dependencies file to the working directory
-COPY requirements.txt .
+# copy our src directory to the working directory
+COPY . .
 
 # install dependencies
 RUN pip install -r requirements.txt
