@@ -1,8 +1,8 @@
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from db.mongo import db
-from models.deployments import Deployment, DeploymentRequest, DeploymentResponse
-from util.auth import get_current_active_user, get_api_key_in_header, verify_api_key, verify_role
+from models.deployments import DeploymentRequest
+from util.auth import get_api_key_in_header, verify_api_key, verify_role
 
 import logging
 logger = logging.getLogger(__name__)
