@@ -25,8 +25,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          git config --global url."https://oauth2:${{ secrets.GH_TOKEN }}@github.com".insteadOf https://github.com
-          terraform -chdir=/github/workspace/.github/terraform init \
+          terraform -chdir=.github/terraform init \
             -backend-config="bucket=${{ secrets.TF_CI_BUCKET }}" \
             -backend-config="region=us-east-1" \
             -backend-config="key=ci/${{ github.event.number }}.tfstate" \
@@ -41,7 +40,7 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        run: terraform -chdir=/github/workspace/.github/terraform destroy -var pr=${{ github.event.number }} -no-color -auto-approve
+        run: terraform -chdir=.github/terraform destroy -var pr=${{ github.event.number }} -no-color -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
