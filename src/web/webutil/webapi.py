@@ -1,16 +1,17 @@
 import requests
 import logging
+from webutil.config import config
 
 logger = logging.getLogger(__name__)
 
 
-def get_api(route, token):
+def get_api(route, token, query_string=""):
     """
     Query api endpoint and return response.
     """
     try:
         response = requests.get(
-            f'http://api:8081/{route}',
+            f'{config("DPB_API_URI")}/{route}{query_string}',
             headers={'Authorization': f'Bearer {token}'}
         )
         # Log our response for debugging.
@@ -29,7 +30,7 @@ def post_api(route, token, data):
     """
     try:
         response = requests.post(
-            f'http://api:8081/{route}',
+            f'{config("DPB_API_URI")}/{route}',
             headers={'Authorization': f'Bearer {token}'},
             json=data
         )
