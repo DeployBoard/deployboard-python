@@ -44,5 +44,5 @@ def test_dashboard_get_services_exception(mock, client, admin_token):
         session['exp'] = 999999999999999
         session['token'] = admin_token
     response = client.get('/dashboard/')
-    assert response.status_code == 500
+    assert response.status_code == 200
     assert b'mocked error' in response.data
