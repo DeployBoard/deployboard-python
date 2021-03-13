@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from unittest.mock import patch
 
 
-@patch('requests.post')
+@patch('webroutes.me.webapi')
 def test_web_me_post_success(mock, client, admin_token):
     with client.session_transaction() as session:
         session['logged_in'] = True
@@ -20,7 +20,7 @@ def test_web_me_post_success(mock, client, admin_token):
     assert urlparse(response.location).path == url_for('me_page.me')
 
 
-@patch('requests.post', side_effect=Exception('mocked error'))
+@patch('webroutes.me.webapi', side_effect=Exception('mock'))
 def test_web_me_post_exception(mock, client, admin_token):
     with client.session_transaction() as session:
         session['logged_in'] = True
@@ -34,4 +34,4 @@ def test_web_me_post_exception(mock, client, admin_token):
         csrf='pytest'
     ), follow_redirects=False)
     assert response.status_code == 200
-    assert b'mocked error' in response.data
+    assert b'mock' in response.data

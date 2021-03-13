@@ -1,6 +1,7 @@
 import pytest
-from api.util.auth import authenticate_user, verify_password, get_password_hash
-
+from unittest.mock import patch
+from api.util.auth import authenticate_user, verify_password, get_password_hash, get_api_key_in_header, verify_api_key
+from fastapi.exceptions import HTTPException
 
 def test_authenticate_user_valid():
     email = 'admin@example.com'
@@ -43,3 +44,36 @@ def test_get_password_hash():
     response = get_password_hash('testpassword')
     assert response is not None
     assert type(response) == str
+
+
+def test_api_key_in_header():
+    response = get_api_key_in_header('X-API-Key:pytest')
+    assert response is not None
+    assert type(response) == str
+    assert response is 'X-API-Key:pytest'
+
+
+def test_verify_api_key_success(apikey):
+    response = verify_api_key(apikey)
+    assert response is not None
+    assert type(response) == dict
+    assert '_id' in response
+    assert 'role' in response
+
+
+def test_verify_api_key_invalid():
+    with pytest.raises(HTTPException) as excinfo:
+        verify_api_key('551137c2f9e1fac808a5f572')
+    assert excinfo.type == HTTPException
+    assert excinfo.value.status_code == 403
+    assert excinfo.value.detail == 'Could not validate credentials.'
+
+
+@pytest.mark.skip(reason="This is not raising Exception as expected.")
+@patch("util.auth.db", side_effect=Exception('mock'))
+def test_verify_api_key_exception(mock, apikey):
+    with pytest.raises(HTTPException) as excinfo:
+        verify_api_key(apikey)
+    assert excinfo.type == HTTPException
+    assert excinfo.value.status_code == 500
+    assert excinfo.value.detail == 'Unexpected error occurred.'

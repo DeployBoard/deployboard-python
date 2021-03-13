@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, render_template, session
-from webutil.webapi import get_api
+from webutil.webapi import webapi
 
 dashboard_page = Blueprint('dashboard_page', __name__)
 logger = logging.getLogger(__name__)
@@ -12,13 +12,18 @@ def dashboard():
     Queries our deployments api endpoint then passes that data into the dashboard template
     """
     try:
-        # Get data from our services api endpoint.
-        services = get_api('services', session['token'])
-        # Get data from our environments api endpoint.
-        environments = get_api('environments', session['token'])
-    except Exception as error:
-        # Return our template with an error.
-        return render_template("dashboard.html", error=error), 500
-
+        # Call our services api endpoint.
+        services = webapi('get', 'services/', token=session['token'])
+        # Log response for debugging.
+        logger.debug(f'services_response: {services}')
+        # Call our environments api endpoint.
+        environments = webapi('get', 'environments/', token=session['token'])
+        # Log response for debugging.
+        logger.debug(f'environments_response: {environments}')
+    except Exception as e:
+        # Log exception.
+        logger.error(f'Exception: {e}')
+        # Return our page with error.
+        return render_template("dashboard.html", error=e)
     # Return our template.
     return render_template("dashboard.html", services=services, environments=environments)

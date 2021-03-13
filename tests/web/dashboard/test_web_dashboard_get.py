@@ -1,9 +1,9 @@
 from unittest.mock import patch
 
 
-@patch('requests.get')
+@patch('webroutes.dashboard.webapi')
 def test_web_dashboard_get_success(mock, client, admin_token):
-    mock.return_value.json.return_value = [
+    mock.return_value = [
         {
             "schema_version": 1,
             "service": "Api",
@@ -35,14 +35,16 @@ def test_web_dashboard_get_success(mock, client, admin_token):
     assert response.status_code == 200
     assert b'Dashboard' in response.data
     assert b'Admin' in response.data
+    assert b'Prod' in response.data
+    assert b'Deployed' in response.data
 
 
-@patch('requests.get', side_effect=Exception('mocked error'))
-def test_dashboard_get_services_exception(mock, client, admin_token):
+@patch('webroutes.dashboard.webapi', side_effect=Exception('mock'))
+def test_dashboard_get_exception(mock, client, admin_token):
     with client.session_transaction() as session:
         session['logged_in'] = True
         session['exp'] = 999999999999999
         session['token'] = admin_token
     response = client.get('/dashboard/')
-    assert response.status_code == 500
-    assert b'mocked error' in response.data
+    assert response.status_code == 200
+    assert b'mock' in response.data

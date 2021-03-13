@@ -1,14 +1,13 @@
-from datetime import datetime, timedelta
 from flask import request, url_for
 from urllib.parse import urlparse
 from unittest.mock import patch
 
 
 @patch('jose.jwt.decode')
-@patch('requests.post')
+@patch('webroutes.login.webapi')
 def test_web_login_post_success(mock_post, mock_decode, client, admin_username, password):
     mock_post.return_value.status_code = 200
-    mock_post.return_value.json.return_value = {
+    mock_post.return_value = {
         'status_code': 200,
         'access_token': 'abc123'
     }
@@ -23,20 +22,6 @@ def test_web_login_post_success(mock_post, mock_decode, client, admin_username, 
     ), follow_redirects=False)
     assert response.status_code == 302
     assert urlparse(response.location).path == url_for('dashboard_page.dashboard')
-
-
-@patch('requests.post')
-def test_web_login_post_invalid_username_password(mock_post, client, admin_username, password):
-    """ Mocking a 401 unauthorized response from the token api endpoint """
-    mock_post.return_value.status_code = 401
-    response = client.post('/login/', data=dict(
-        email=admin_username,
-        password=password,
-        csrf='pytest'
-    ), follow_redirects=True)
-    assert response.status_code == 401
-    assert request.path == url_for('login_page.login')
-    assert b'Invalid Username or Password' in response.data
 
 
 def test_web_login_post_no_email(client, password):
@@ -57,10 +42,8 @@ def test_web_login_post_no_password(client, admin_username):
     assert b'Bad Request' in response.data
 
 
-@patch('requests.post')
-def test_web_login_post_exception(mock_post, client, admin_username, password):
-    """ Mocking a 500 response from the token api endpoint to trigger exception """
-    mock_post.return_value.status_code = 500
+@patch('webroutes.login.webapi', side_effect=Exception('mock'))
+def test_web_login_post_exception(mock, client, admin_username, password):
     response = client.post('/login/', data=dict(
         email=admin_username,
         password=password,
@@ -68,4 +51,4 @@ def test_web_login_post_exception(mock_post, client, admin_username, password):
     ), follow_redirects=True)
     assert response.status_code == 200
     assert request.path == url_for('login_page.login')
-    assert b'alert' in response.data
+    assert b'mock' in response.data

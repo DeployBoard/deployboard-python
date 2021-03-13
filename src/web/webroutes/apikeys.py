@@ -1,6 +1,6 @@
 import logging
-import requests
 from flask import Blueprint, render_template, session
+from webutil.webapi import webapi
 
 apikeys_page = Blueprint('apikeys_page', __name__)
 logger = logging.getLogger(__name__)
@@ -11,14 +11,15 @@ def apikeys():
     """
     Queries our apikeys api endpoint then passes that data into the apikeys template
     """
-    # Get data from our users api endpoint.
-    response = requests.get(
-        'http://api:8081/apikeys',
-        headers={'Authorization': f'Bearer {session["token"]}'}
-    )
-    # Log our response for debugging.
-    logger.debug(f"apikeys response: {response.json()}")
-    # Set our services variable that we will pass into the template.
-    apikeys_list = response.json()
+    try:
+        # Call our api endpoint.
+        apikeys = webapi('get', 'apikeys/', token=session['token'])
+        # Log response for debugging.
+        logger.debug(f'apikeys response: {apikeys}')
+    except Exception as e:
+        # Log exception.
+        logger.error(f'Exception: {e}')
+        # Return our page with error.
+        return render_template("apikeys.html", error=e)
     # Return our template.
-    return render_template("apikeys.html", apikeys=apikeys_list)
+    return render_template("apikeys.html", apikeys=apikeys)

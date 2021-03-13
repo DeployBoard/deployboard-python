@@ -15,7 +15,7 @@ from webroutes.apikeys import apikeys_page
 from webroutes.integrations import integrations_page
 from webroutes.billing import billing_page
 from webroutes.environments import environments_page
-from webutil.webapi import get_api
+from webutil.webapi import webapi
 from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
@@ -81,7 +81,7 @@ def get_me_info():
     """
     try:
         # Get data from our me api endpoint.
-        response = get_api('me/', session['token'])
+        response = webapi('get', 'me/', session['token'])
         # Set session from response.
         session['theme'] = response['theme']
         # Set account from response.

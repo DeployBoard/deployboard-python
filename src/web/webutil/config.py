@@ -7,8 +7,7 @@ def config(param):
     """
     # Initialize our config.
     config_dic = {
-        "MONGO_URI": None,
-        "MONGO_DATABASE": "deployboard"
+        "DPB_API_URI": "http://api:8081"
     }
 
     # Loop through our defaults.

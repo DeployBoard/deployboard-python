@@ -150,6 +150,10 @@ def verify_api_key(api_key):
         # Log for debugging.
         logger.debug(f"exception: {e}")
         # Raise exception if error or not found.
-        raise HTTPException(status_code=403, detail="Could not validate credentials")
+        raise HTTPException(status_code=500, detail="Unexpected error occurred.")
+
+    # If db returns no results, return 403
+    if api_key_object is None:
+        raise HTTPException(status_code=403, detail="Could not validate credentials.")
 
     return api_key_object
