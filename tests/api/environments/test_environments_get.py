@@ -20,10 +20,9 @@ def test_get_environments_bad_token():
 
 
 # TODO: This is working, but it's not covering the code in the report.
-@patch("db.mongo.db.accounts")
-def test_get_environments_exception(mock_db, admin_token):
-    mock_db.side_effect = Exception('ConnectionFailure')
+@patch("routes.environments.db", side_effect=Exception('mock'))
+def test_get_environments_exception(mock, admin_token):
     response = client.get("/environments/", headers={"Authorization": admin_token})
     assert response.status_code == 500
     assert response.json() == {"detail": "Unexpected error occurred."}
-    assert mock_db.called_once()
+    assert mock.called_once()

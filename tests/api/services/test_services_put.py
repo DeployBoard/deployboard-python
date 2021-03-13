@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 from api.main import app
 
@@ -61,13 +62,34 @@ def test_create_service_bad_token():
 
 def test_create_service_invalid_role(viewer_token):
     body = {
-        "application": "Test",
-        "service": "Pytest"
+        "application": "TestViewer",
+        "service": "PytestViewer"
     }
     response = client.put("/services/", headers={"Authorization": viewer_token}, json=body)
     assert response.status_code == 401
     assert response.json() == {"detail": "Unauthorized"}
 
 
+@patch('routes.services.db')
+def test_create_service_exists(mock, admin_token):
+    body = {
+        "application": "TestExists",
+        "service": "PytestExists"
+    }
+    mock.return_value = body
+    response = client.put("/services/", headers={"Authorization": admin_token}, json=body)
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Service already exists in this account."}
+
+
 # TODO: Mock the mongodb exception in the try:expect
-# def test_create_service_mongo_exception(admin_token):
+@pytest.mark.skip(reason="Not using the second call of db. Maybe refactor the source to 2 separate functions.")
+@patch('routes.services.db', side_effect=[None, Exception("mocked error")])
+def test_create_service_mongo_exception(mock, admin_token):
+    body = {
+        "application": "Test348579",
+        "service": "Pytest2908345809"
+    }
+    response = client.put("/services/", headers={"Authorization": admin_token}, json=body)
+    assert response.status_code == 500
+    assert response.json() == {"detail": "Unexpected error occurred."}

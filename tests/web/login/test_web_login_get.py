@@ -1,7 +1,5 @@
-from datetime import datetime, timedelta
 from flask import request, url_for
 from urllib.parse import urlparse
-from unittest.mock import patch
 
 
 def test_web_login_get_success(client):

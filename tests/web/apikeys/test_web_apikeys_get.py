@@ -1,9 +1,10 @@
+import pytest
 from unittest.mock import patch
 
 
-@patch('requests.get')
+@patch('webroutes.apikeys.webapi')
 def test_web_apikeys_get_success(mock, client, admin_token):
-    mock.return_value.json.return_value = [
+    mock.return_value = [
         {
             "_id": "5fe51081e178d1bda551cc2a",
             "schema_version": 1,
@@ -27,7 +28,7 @@ def test_web_apikeys_get_success(mock, client, admin_token):
     assert b'Created By' in response.data
 
 
-@patch('requests.get', side_effect=Exception('mocked error'))
+@patch('webroutes.apikeys.webapi', side_effect=Exception('mock'))
 def test_web_apikeys_get_exception(mock, client, admin_token):
     with client.session_transaction() as session:
         session['logged_in'] = True
@@ -35,4 +36,4 @@ def test_web_apikeys_get_exception(mock, client, admin_token):
         session['token'] = admin_token
     response = client.get('/settings/apikeys/')
     assert response.status_code == 200
-    assert b'mocked error' in response.data
+    assert b'mock' in response.data
