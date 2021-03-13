@@ -1,6 +1,6 @@
 import logging
-import requests
 from flask import Blueprint, render_template, request, session, redirect, url_for
+from webutil.webapi import webapi
 
 logs_page = Blueprint('logs_page', __name__)
 logger = logging.getLogger(__name__)
@@ -19,25 +19,27 @@ def logs():
     query_string_dict = request.args.to_dict()
     # Log our query string dict for debugging.
     logger.debug(f"query_string_dict: {query_string_dict}")
-    # Get data from our logs api endpoint.
-    logs_response = get_logs(query_string, session['token'])
-    # Log our response for debugging.
-    logger.debug(f"logs response: {logs_response}")
-    # Set our versions variable that we will pass into the template.
-    logs_data = logs_response
+    try:
+        # Call our logs api endpoint.
+        logs_response = webapi('get', f'logs/?{query_string}', token=session['token'])
+        # Log response for debugging.
+        logger.debug(f'logs_response: {logs_response}')
+        # Call our services api endpoint.
+        services_response = webapi('get', 'services/', token=session['token'])
+        # Log response for debugging.
+        logger.debug(f'services_response: {services_response}')
+    except Exception as e:
+        # Log exception.
+        logger.error(f'Exception: {e}')
+        # Return our page with error.
+        return render_template("logs.html", error=e)
 
-    # Get data from our services api endpoint for search options.
-    services_response = get_services(session['token'])
-    # Log our response for debugging.
-    logger.debug(f"services response: {services_response}")
-    # Set our versions variable that we will pass into the template.
-    services_data = services_response
     # Instantiate our empty lists.
     applications = []
     services = []
     environments = []
     # Loop through our logs_data and pluck out our wanted key values.
-    for service_dict in services_data:
+    for service_dict in services_response:
         applications.append(service_dict['application'])
         services.append(service_dict['service'])
         for version in service_dict['versions']:
@@ -45,7 +47,7 @@ def logs():
 
     # Return our template.
     return render_template("logs.html",
-                           logs=logs_data,
+                           logs=logs_response,
                            applications=set(applications),
                            services=set(services),
                            environments=set(environments),
@@ -71,37 +73,3 @@ def logs_search():
         query_params['environment'] = request.form['environment']
     # Return the logs page with our query string parameters from request form.
     return redirect(url_for('logs_page.logs', **query_params))
-
-
-def get_logs(query_string, token):
-    try:
-        response = requests.get(
-            f'http://api:8081/logs/?{query_string}',
-            headers={'Authorization': f'Bearer {token}'}
-        )
-        # Log our response for debugging.
-        logger.debug(f"response: {response.json()}")
-    except Exception as error:
-        # Log error for debugging.
-        logger.error(f"error: {error}")
-        # Re-raise the same error.
-        raise
-
-    return response.json()
-
-
-def get_services(token):
-    try:
-        response = requests.get(
-            f'http://api:8081/services/',
-            headers={'Authorization': f'Bearer {token}'}
-        )
-        # Log our response for debugging.
-        logger.debug(f"response: {response.json()}")
-    except Exception as error:
-        # Log error for debugging.
-        logger.error(f"error: {error}")
-        # Re-raise the same error.
-        raise
-
-    return response.json()

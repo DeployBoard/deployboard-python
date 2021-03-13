@@ -10,9 +10,6 @@
       Add New
     </button>
   </div>
-  {% if error %}
-  <div>{{ error }}</div>
-  {% endif %}
   <table>
     <thead>
       <tr>
@@ -47,14 +44,14 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form class="form-group" action="{{ url_for('applications_page.add_application') }}" method=put>
+      <form class="form-group" action="{{ url_for('applications_page.add_application') }}" method=post>
         <div class="modal-body">
-          <!-- Service Name -->
-          <label for="service_name" class="col-form-label">Service Name:</label>
-          <input type="text" class="form-control" placeholder="Service Name" name="service_name" id="service_name" value="{{ request.form.service_name}}" required autofocus>
           <!-- Application Name -->
           <label for="application_name" class="col-form-label">Application Name:</label>
           <input type="text" class="form-control" placeholder="Application Name" name="application_name" id="application_name" value="{{ request.form.application_name}}" required>
+          <!-- Service Name -->
+          <label for="service_name" class="col-form-label">Service Name:</label>
+          <input type="text" class="form-control" placeholder="Service Name" name="service_name" id="service_name" value="{{ request.form.service_name}}" required autofocus>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </div>
         <div class="modal-footer">

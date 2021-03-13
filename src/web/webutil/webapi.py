@@ -1,44 +1,34 @@
-import requests
+from requests import request
 import logging
 from webutil.config import config
 
 logger = logging.getLogger(__name__)
 
 
-def get_api(route, token, query_string=""):
+def webapi(method, route, token=None, data=None, json=None):
     """
     Query api endpoint and return response.
     """
+    headers = {'Authorization': f'Bearer {token}'} if token is not None else None
     try:
-        response = requests.get(
-            f'{config("DPB_API_URI")}/{route}{query_string}',
-            headers={'Authorization': f'Bearer {token}'}
-        )
-        # Log our response for debugging.
-        logger.debug(f"api response: {response.json()}")
-    except Exception as error:
-        # Log error for debugging.
-        logger.error(f"api error: {error}")
-        # Re-raise the same error.
-        raise
-    return response.json()
-
-
-def post_api(route, token, data):
-    """
-    Post to api endpoint and return response.
-    """
-    try:
-        response = requests.post(
+        response = request(
+            method,
             f'{config("DPB_API_URI")}/{route}',
-            headers={'Authorization': f'Bearer {token}'},
-            json=data
+            headers=headers,
+            json=json,
+            data=data
         )
         # Log our response for debugging.
-        logger.debug(f"deployments response: {response.json()}")
+        logger.debug(f"api {method} {route} response: {response.status_code} {response.json()}")
     except Exception as error:
         # Log error for debugging.
-        logger.error(f"deployments error: {error}")
+        logger.error(f"api {method} {route} error: {error}")
         # Re-raise the same error.
         raise
+
+    # If the api returns anything other than a 200
+    #  raise that as an exception so the route can do something with it.
+    if response.status_code != 200:
+        raise Exception(response.status_code, response.json())
+
     return response.json()

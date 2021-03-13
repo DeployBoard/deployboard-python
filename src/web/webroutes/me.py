@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, render_template, session, request, redirect, url_for
-from webutil.webapi import get_api, post_api
+from webutil.webapi import webapi
 
 me_page = Blueprint('me_page', __name__)
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ def me():
     """
     try:
         # Get data from our me api endpoint.
-        response = get_api('me/', session['token'])
+        response = webapi('get', 'me/', token=session['token'])
         # Log for debugging
         logger.debug(f'me_response: {response}')
     except Exception as error:
@@ -37,7 +37,7 @@ def update_me():
     }
     try:
         # Post data to our me api endpoint.
-        response = post_api('me/', session['token'], data)
+        response = webapi('post', 'me/', token=session['token'], json=data)
         # Log for debugging
         logger.debug(f'me_response: {response}')
     except Exception as error:

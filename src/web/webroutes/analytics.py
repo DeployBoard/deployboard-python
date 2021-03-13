@@ -1,8 +1,8 @@
 import logging
-import requests
 from datetime import datetime, timedelta
 from dateutil import tz
 from flask import Blueprint, render_template, request, session, redirect, url_for
+from webutil.webapi import webapi
 
 analytics_page = Blueprint('analytics_page', __name__)
 
@@ -42,7 +42,17 @@ def analytics():
     # Log our query string dict for debugging.
     logger.debug(f"query_string_dict: {query_string_dict}")
     # Get data from our logs api endpoint.
-    logs_response = get_logs(query_string, session['token'])
+    try:
+        # Call our api endpoint.
+        logs_response = webapi('get', f'logs/?{query_string}', token=session['token'])
+        # Log response for debugging.
+        logger.debug(f'logs_response: {logs_response}')
+    except Exception as e:
+        # Log exception.
+        logger.error(f'Exception: {e}')
+        # Return our page with error.
+        return render_template("analytics.html", error=e, query_string=query_string)
+
     # Log our response for debugging.
     logger.debug(f"logs response: {logs_response}")
     # Set our versions variable that we will pass into the template.
@@ -103,9 +113,17 @@ def analytics():
         daily_deploy_data.append({ 'date': formatted_start_date, 'success_count': success_count, 'failed_count': failed_count})
     logger.debug(f'daily_deploy_data: {daily_deploy_data}')
 
-
     # Get data from our services api endpoint for search options.
-    services_response = get_services(session['token'])
+    try:
+        # Call our api endpoint.
+        services_response = webapi('get', 'services/', token=session['token'])
+        # Log response for debugging.
+        logger.debug(f'services_response: {services_response}')
+    except Exception as e:
+        # Log exception.
+        logger.error(f'Exception: {e}')
+        # Return our page with error.
+        return render_template("analytics.html", error=e, query_string=query_string)
 
     # Log our response for debugging.
     logger.debug(f"services response: {services_response}")
@@ -120,6 +138,8 @@ def analytics():
         applications.append(service_dict['application'])
         services.append(service_dict['service'])
         for version in service_dict['versions']:
+            # TODO: We can probably get this from our new environments api endpoint.
+            #  This would mean another backend api call, but this logic would be simpler.
             environments.append(version['environment'])
 
     # Return our template.
@@ -155,37 +175,3 @@ def analytics_search():
         query_params['daysago'] = request.form['daysago']
     # Return the logs page with our query string parameters from request form.
     return redirect(url_for('analytics_page.analytics', **query_params))
-
-
-def get_logs(query_string, token):
-    try:
-        response = requests.get(
-            f'http://api:8081/logs?{query_string}',
-            headers={'Authorization': f'Bearer {token}'}
-        )
-        # Log our response for debugging.
-        logger.debug(f"response: {response.json()}")
-    except Exception as error:
-        # Log error for debugging.
-        logger.error(f"error: {error}")
-        # Re-raise the same error.
-        raise
-
-    return response.json()
-
-
-def get_services(token):
-    try:
-        response = requests.get(
-            f'http://api:8081/services',
-            headers={'Authorization': f'Bearer {token}'}
-        )
-        # Log our response for debugging.
-        logger.debug(f"response: {response.json()}")
-    except Exception as error:
-        # Log error for debugging.
-        logger.error(f"error: {error}")
-        # Re-raise the same error.
-        raise
-
-    return response.json()
