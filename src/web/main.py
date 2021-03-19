@@ -16,6 +16,7 @@ from webroutes.integrations import integrations_page
 from webroutes.billing import billing_page
 from webroutes.environments import environments_page
 from webutil.webapi import webapi
+from webutil.config import config
 from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
@@ -87,6 +88,8 @@ def get_me_info():
         # Set account from response.
         session['account'] = response['account']
     except Exception as error:
+        # Log error.
+        logger.error(f"me error: {error}")
         # For now we just pass on without doing anything. We'll let the destination route throw error if that endpoint
         # is unable to load. This may change in the future.
         pass
@@ -126,7 +129,7 @@ def settings():
 
 if __name__ == "__main__":
     app.run(
-        host=os.getenv('FLASK_HOST', '0.0.0.0'),
-        port=os.getenv('FLASK_PORT', '8080'),
-        debug=os.getenv('FLASK_DEBUG', False)
+        host=config('DPB_WEB_HOST'),
+        port=config('DPB_WEB_PORT'),
+        debug=config('DPB_WEB_DEBUG')
     )

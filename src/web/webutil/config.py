@@ -7,6 +7,10 @@ def config(param):
     """
     # Initialize our config.
     config_dic = {
+        "LOG_LEVEL": "warn",
+        "DPB_WEB_HOST": "0.0.0.0",
+        "DPB_WEB_PORT": "8080",
+        "DPB_WEB_DEBUG": False,
         "DPB_API_URI": "http://api:8081"
     }
 
