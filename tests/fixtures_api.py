@@ -42,12 +42,44 @@ def user(admin_token):
     resp = response.json()
     return resp['_id']
 
-
 @pytest.fixture(scope="session")
 def apikey(admin_token):
     body = {
-        "name": "pytest-api-key",
+        "name": "pytest-api-key-to-delete",
         "role": "Editor"
+    }
+    response = client.put("/apikeys/", headers={"Authorization": admin_token}, json=body)
+    resp = response.json()
+    return resp['_id']
+
+
+@pytest.fixture(scope="session")
+def admin_apikey(admin_token):
+    body = {
+        "name": "pytest-admin-api-key",
+        "role": "Admin"
+    }
+    response = client.put("/apikeys/", headers={"Authorization": admin_token}, json=body)
+    resp = response.json()
+    return resp['_id']
+
+
+@pytest.fixture(scope="session")
+def editor_apikey(admin_token):
+    body = {
+        "name": "pytest-editor-api-key",
+        "role": "Editor"
+    }
+    response = client.put("/apikeys/", headers={"Authorization": admin_token}, json=body)
+    resp = response.json()
+    return resp['_id']
+
+
+@pytest.fixture(scope="session")
+def viewer_apikey(admin_token):
+    body = {
+        "name": "pytest-viewer-api-key",
+        "role": "Viewer"
     }
     response = client.put("/apikeys/", headers={"Authorization": admin_token}, json=body)
     resp = response.json()

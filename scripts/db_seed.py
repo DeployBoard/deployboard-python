@@ -110,9 +110,8 @@ def create_service(application, service):
         "application": application,
         "account": "Example",
         "tags": ["python"],
-        "versions": [
-            {
-                "environment": "Dev",
+        "environments": {
+            "Dev": {
                 "status": "Deployed",
                 "version": "1.3.0",
                 "timestamp": 1608433640,
@@ -121,8 +120,7 @@ def create_service(application, service):
                     "color": "green"
                 }
             },
-            {
-                "environment": "Stage",
+            "Stage": {
                 "status": "Deployed",
                 "version": "1.2.1",
                 "timestamp": 1608523640,
@@ -131,8 +129,7 @@ def create_service(application, service):
                     "color": "green"
                 }
             },
-            {
-                "environment": "Prod",
+            "Prod": {
                 "status": "Deployed",
                 "version": "1.2.0",
                 "timestamp": 1608623640,
@@ -141,7 +138,7 @@ def create_service(application, service):
                     "color": "green"
                 }
             }
-        ]
+        }
     }
     # Insert the user into the db.
     insert_resp = db.services.insert_one(service_dict)
@@ -170,6 +167,7 @@ def create_logs(application, service, days_ago):
             # Convert it to epoch for our start timestamp.
             start_timestamp = start_date.timestamp()
             # Append our start time (Deploying).
+            # TODO: properly generate the hashes.
             logs_list.append(
                 {
                     "schema_version": 1.0,
@@ -180,6 +178,8 @@ def create_logs(application, service, days_ago):
                     "status": "Deploying",
                     "version": version,
                     "timestamp": start_timestamp,
+                    "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
+                    "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
                     "custom": {
                         "module": "foo",
                         "color": "green"
@@ -196,6 +196,7 @@ def create_logs(application, service, days_ago):
             else:
                 finished_status = "Deployed"
             # Append our stop time (Deployed).
+            # TODO: properly generate the hashes.
             logs_list.append(
                 {
                     "schema_version": 1.0,
@@ -206,6 +207,8 @@ def create_logs(application, service, days_ago):
                     "status": finished_status,
                     "version": version,
                     "timestamp": stop_timestamp,
+                    "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
+                    "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
                     "custom": {
                         "module": "foo",
                         "color": "green"

@@ -12,9 +12,8 @@ def test_web_dashboard_get_success(mock, client, admin_token):
             "tags": [
                 "python"
             ],
-            "versions": [
-                {
-                    "environment": "Prod",
+            "environments": {
+                "Prod": {
                     "status": "Deployed",
                     "version": "1.2.0",
                     "timestamp": 1608623640,
@@ -23,7 +22,7 @@ def test_web_dashboard_get_success(mock, client, admin_token):
                         "color": "green"
                     }
                 }
-            ],
+            },
             "_id": "602ec3a41d6ef526c9362d42"
         }
     ]

@@ -29,19 +29,19 @@
     </thead>
     <tbody id="dashboardTable">
       {% for service in services %}
-      {% for version in service.versions %}
+      {% for environment in service.environments %}
       <tr>
         <td>{{ service['application'] }}</td>
         <td>{{ service['service'] }}</td>
-        <td>{{ version['environment'] }}</td>
-        <td>{{ version['version'] }}</td>
-        <td>{{ version['status'] }}</td>
+        <td>{{ environment }}</td>
+        <td>{{ service['environments'][environment]['version'] }}</td>
+        <td>{{ service['environments'][environment]['status'] }}</td>
         <td>
         {% for tag in service['tags'] %}
           <span class="badge badge-primary">{{ tag }}</span>
         {% endfor %}
         </td>
-        <td>{{ version['timestamp'] | epoch_to_date }}</td>
+        <td>{{ service['environments'][environment]['timestamp'] | epoch_to_date }}</td>
       </tr>
       {% endfor %}
       {% endfor %}

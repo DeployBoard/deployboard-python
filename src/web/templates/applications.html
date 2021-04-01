@@ -23,7 +23,7 @@
         <td>{{ app }}</td>
         <td>
           {% for service in services %}
-            {% if app in service.application %}
+            {% if app == service.application %}
               {{ service.service }}
             {% endif %}
           {% endfor %}
