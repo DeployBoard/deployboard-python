@@ -29,6 +29,8 @@ async def get_all_services(current_user: User = Depends(get_current_active_user)
     # For each document returned from find().
     # We only want to find() documents in our account.
     # TODO: Need to additionally sort by the account's preferred environment order.
+    #  - Does that functionality belong here, or should it be up to the caller to perform the sort?
+    #  - They would also have to call environments to get the order, we could do that for them here to save time.
     for service in db.services.find({"account": current_user['account']}).sort([("application", 1), ("service", 1)]):
         # Convert the _id to a string.
         service['_id'] = str(service['_id'])

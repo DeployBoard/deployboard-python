@@ -17,6 +17,7 @@
     <thead>
       <tr>
         <th>Name</th>
+        <th>Key</th>
         <th>Role</th>
         <th>Enabled</th>
         <th>Created By</th>
@@ -30,6 +31,7 @@
       {% for key in apikeys %}
       <tr>
         <td>{{ key['name'] }}</td>
+        <td>{{ key['_id'] }}</td>
         <td>{{ key['role'] }}</td>
         <td>{{ key['enabled'] }}</td>
         <td>{{ key['created_by'] }}</td>

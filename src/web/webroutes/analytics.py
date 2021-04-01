@@ -133,16 +133,21 @@ def analytics():
     applications = []
     services = []
     environments = []
-    # Loop through our logs_data and pluck out our wanted key values.
+    # Loop through our services_data and pluck out our wanted key values.
     for service_dict in services_data:
         applications.append(service_dict['application'])
         services.append(service_dict['service'])
-        for version in service_dict['versions']:
-            # TODO: We can probably get this from our new environments api endpoint.
-            #  This would mean another backend api call, but this logic would be simpler.
-            environments.append(version['environment'])
+        # We could get the environment list from the environments api endpoint,
+        #  but we are already looping through the services, so just get environments from here.
+        for environment in service_dict['environments']:
+            environments.append(environment)
 
-    # Return our template.
+    # Log our lists for debugging.
+    logger.debug(f'applications_list: {applications}')
+    logger.debug(f'services_list: {services}')
+    logger.debug(f'environments_list: {environments}')
+
+    # Return our template. Converting our lists to sets to remove duplicate values.
     return render_template(
         "analytics.html",
         daily_deploy_data=daily_deploy_data,

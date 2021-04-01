@@ -4,11 +4,11 @@ from models.base import CustomBaseModel
 
 
 class NewLog(CustomBaseModel):
-    service: str = None
-    application: str = None
-    environment: str = None
-    status: str = None
-    version: str = None
+    service: str
+    application: str
+    environment: str
+    status: str
+    version: str
     custom: Optional[dict] = None
 
     class Config:
@@ -26,8 +26,11 @@ class NewLog(CustomBaseModel):
 
 
 class Log(NewLog):
+    account: str
+    timestamp: float
+    hash: str
+    hash_chain: str
     tags: Optional[List[str]] = None
-    timestamp: float = None
 
     class Config:
         schema_extra = {
@@ -40,6 +43,8 @@ class Log(NewLog):
                 "status": "Deploying",
                 "version": "1.3.0",
                 "timestamp": 1610146671,
+                "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
+                "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
                 "custom": {
                     "module": "foo",
                     "color": "green"
@@ -64,6 +69,8 @@ class LogResponse(Log):
                 "status": "Deploying",
                 "version": "1.3.0",
                 "timestamp": 1610146671,
+                "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
+                "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
                 "custom": {
                     "module": "foo",
                     "color": "green"

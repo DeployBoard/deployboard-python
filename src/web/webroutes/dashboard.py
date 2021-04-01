@@ -25,5 +25,8 @@ def dashboard():
         logger.error(f'Exception: {e}')
         # Return our page with error.
         return render_template("dashboard.html", error=e)
+
+    # TODO: Sort the services['environments'] by environment order we receive from environments value.
+
     # Return our template.
-    return render_template("dashboard.html", services=services, environments=environments)
+    return render_template("dashboard.html", services=services)

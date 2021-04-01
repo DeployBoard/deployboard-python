@@ -3,8 +3,7 @@ from pydantic import BaseModel, Field
 from models.base import CustomBaseModel
 
 
-class ServiceVersion(BaseModel):
-    environment: str = None
+class ServiceEnvironment(BaseModel):
     status: str = None
     version: str = None
     timestamp: int = None
@@ -13,7 +12,6 @@ class ServiceVersion(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "environment": "Dev",
                 "status": "Deployed",
                 "version": "1.2.1",
                 "timestamp": 1608633640,
@@ -36,7 +34,7 @@ class NewService(CustomBaseModel):
                 "service": "API",
                 "application": "DeployBoard",
                 "tags": [],
-                "versions": []
+                "environments": {}
             }
         }
 
@@ -44,7 +42,7 @@ class NewService(CustomBaseModel):
 class Service(NewService):
     account: str
     tags: Optional[List[str]] = []
-    versions: Optional[List[ServiceVersion]] = []
+    environments: Optional[dict] = {}
 
     class Config:
         schema_extra = {
@@ -54,9 +52,8 @@ class Service(NewService):
                 "service": "API",
                 "application": "DeployBoard",
                 "tags": ["backend", "python", "fastapi"],
-                "versions": [
-                    {
-                        "environment": "Dev",
+                "environments": {
+                    "Dev": {
                         "status": "Deployed",
                         "version": "1.2.1",
                         "timestamp": 1608633640,
@@ -65,8 +62,7 @@ class Service(NewService):
                             "color": "green"
                         }
                     },
-                    {
-                        "environment": "Prod",
+                    "Prod": {
                         "status": "Deployed",
                         "version": "1.2.0",
                         "timestamp": 1608623640,
@@ -75,7 +71,7 @@ class Service(NewService):
                             "color": "green"
                         }
                     }
-                ]
+                }
             }
         }
 
@@ -93,9 +89,8 @@ class ServiceResponse(Service):
                 "service": "API",
                 "application": "DeployBoard",
                 "tags": ["backend", "python", "fastapi"],
-                "versions": [
-                    {
-                        "environment": "Dev",
+                "environments": {
+                    "Dev": {
                         "status": "Deployed",
                         "version": "1.2.1",
                         "timestamp": 1608633640,
@@ -104,8 +99,7 @@ class ServiceResponse(Service):
                             "color": "green"
                         }
                     },
-                    {
-                        "environment": "Prod",
+                    "Prod": {
                         "status": "Deployed",
                         "version": "1.2.0",
                         "timestamp": 1608623640,
@@ -114,6 +108,6 @@ class ServiceResponse(Service):
                             "color": "green"
                         }
                     }
-                ]
+                }
             }
         }
