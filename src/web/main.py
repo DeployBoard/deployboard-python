@@ -1,4 +1,3 @@
-import os
 import logging
 from flask import Flask, session, redirect, url_for, request
 from flask_wtf.csrf import CSRFProtect
@@ -23,7 +22,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = os.environ['APP_SECRET']
+app.secret_key = config('APP_SECRET')
 csrf = CSRFProtect(app)
 
 app.register_blueprint(login_page, url_prefix='/login')

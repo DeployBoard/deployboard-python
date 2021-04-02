@@ -26,7 +26,7 @@ async def get_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
-@router.post("/")
+@router.patch("/")
 async def update_me(user_updates: UpdateUserAsSelf, current_user: User = Depends(get_current_active_user)):
     """
     Update requester user account with allowed properties.
@@ -42,6 +42,8 @@ async def update_me(user_updates: UpdateUserAsSelf, current_user: User = Depends
         if user_updates_dict[key] is not None:
             # Add to the updates dict.
             updates[key] = user_updates_dict[key]
+    # Log for debugging.
+    logger.debug(f'updates: {updates}')
     # Check if our updates dict is empty since all fields are optional.
     if not updates:
         # Skip the DB call, we aren't making any updates.

@@ -1,14 +1,14 @@
-import os
 import logging
 from jose import jwt
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from webutil.webapi import webapi
+from webutil.config import config
 
 login_page = Blueprint('login_page', __name__)
 
 logger = logging.getLogger(__name__)
 
-SECRET_KEY = os.environ['APP_SECRET']
+SECRET_KEY = config('APP_SECRET')
 ALGORITHM = "HS256"
 
 

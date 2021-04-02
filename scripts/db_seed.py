@@ -1,8 +1,10 @@
 import os
 import logging
+import secrets
 from random import random, randint
 from datetime import datetime, timedelta
 from pymongo import MongoClient
+from passlib.context import CryptContext
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -11,6 +13,8 @@ logger = logging.getLogger(__name__)
 mongo_uri = os.environ["MONGO_URI"] if "MONGO_URI" in os.environ else "localhost:27017"
 database = os.environ["MONGO_DATABASE"] if "MONGO_DATABASE" in os.environ else "deployboard"
 mongo_client = MongoClient(mongo_uri)
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Check if our db exists.
 if database in mongo_client.list_database_names():
@@ -51,11 +55,20 @@ def create_user(user_role, enabled):
         email = f"{user_role.lower()}@example.com"
     else:
         email = f"disabled{user_role.lower()}@example.com"
+
+    # Generate salt and hashed_password.
+    password = "secret"
+    salt = secrets.token_hex(16)
+    pepper = os.environ["PEPPER"] if "PEPPER" in os.environ else "changeme"
+    password_hash = pwd_context.hash(password + salt + pepper)
+
     # Define our user.
     user_dict = {
         "schema_version": 1.0,
         "account": "Example",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",  # "secret"
+        "salt": salt,
+        "hashed_password": password_hash,
+        "password_expires": 1610053395,
         "email": email,
         "role": user_role,
         "first_name": "John",

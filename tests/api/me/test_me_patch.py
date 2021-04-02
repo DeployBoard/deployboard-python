@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from api.main import app
-from unittest.mock import patch
-from routes.me import update_user_in_db
+# from unittest.mock import patch
+# from routes.me import update_user_in_db
 
 client = TestClient(app)
 
@@ -13,10 +13,10 @@ def test_update_me_success(viewer_token):
         "theme": "pytest",
         "avatar": "https://pytest",
     }
-    post_response = client.post("/me/", headers={"Authorization": viewer_token}, json=body)
-    assert post_response.status_code == 200
-    assert type(post_response.json()) == dict
-    assert post_response.json()['modified_count'] == '1'
+    patch_response = client.patch("/me/", headers={"Authorization": viewer_token}, json=body)
+    assert patch_response.status_code == 200
+    assert type(patch_response.json()) == dict
+    assert patch_response.json()['modified_count'] == '1'
     get_response = client.get("/me/", headers={"Authorization": viewer_token})
     assert type(get_response.json()) == dict
     assert get_response.json()['first_name'] == 'Py'
@@ -26,33 +26,33 @@ def test_update_me_success(viewer_token):
 
 
 def test_update_me_no_header():
-    response = client.post("/me/")
+    response = client.patch("/me/")
     assert response.status_code == 401
     assert response.json() == {"detail": "Not authenticated"}
 
 
 def test_update_me_invalid_token():
-    response = client.post("/me/", headers={"Authorization": "abcd"})
+    response = client.patch("/me/", headers={"Authorization": "abcd"})
     assert response.status_code == 401
     assert response.json() == {"detail": "Not authenticated"}
 
 
-def test_post_me_no_update(viewer_token):
+def test_patch_me_no_update(viewer_token):
     body = {}
-    post_response = client.post("/me/", headers={"Authorization": viewer_token}, json=body)
-    assert post_response.status_code == 200
-    assert type(post_response.json()) == dict
-    assert post_response.json()['modified_count'] == '0'
+    patch_response = client.patch("/me/", headers={"Authorization": viewer_token}, json=body)
+    assert patch_response.status_code == 200
+    assert type(patch_response.json()) == dict
+    assert patch_response.json()['modified_count'] == '0'
 
 
-def test_post_me_invalid_update(viewer_token):
+def test_patch_me_invalid_update(viewer_token):
     body = {
         'role': 'Admin'
     }
-    post_response = client.post("/me/", headers={"Authorization": viewer_token}, json=body)
-    assert post_response.status_code == 200
-    assert type(post_response.json()) == dict
-    assert post_response.json()['modified_count'] == '0'
+    patch_response = client.patch("/me/", headers={"Authorization": viewer_token}, json=body)
+    assert patch_response.status_code == 200
+    assert type(patch_response.json()) == dict
+    assert patch_response.json()['modified_count'] == '0'
 
 
 # TODO: This is not working.
