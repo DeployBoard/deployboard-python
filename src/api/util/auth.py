@@ -1,4 +1,3 @@
-import os
 from datetime import datetime, timedelta
 import logging
 from bson import ObjectId
@@ -10,12 +9,13 @@ from passlib.context import CryptContext
 from models.users import User
 from models.auth import TokenData
 from db.mongo import db
+from util.config import config
 
 logger = logging.getLogger(__name__)
 
 # to get a string like this run:
 # openssl rand -hex 32
-SECRET_KEY = os.environ['APP_SECRET']
+SECRET_KEY = config('APP_SECRET')
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -42,7 +42,7 @@ def authenticate_user(username: str, password: str):
     # Convert the _id to a string.
     user['_id'] = str(user['_id'])
     # If user exists, but the password does not match, we want to return invalid username/password.
-    if not verify_password(password, user['hashed_password']):
+    if not verify_password(password + user['salt'] + config('DPB_PEPPER'), user['hashed_password']):
         logger.info(f"User: {username} incorrect password.")
         return False
     return user
@@ -62,14 +62,14 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 
-def verify_password(plain_password, hashed_password):
+def verify_password(salted_peppered_password, hashed_password):
     logger.debug("Verifying password")
-    return pwd_context.verify(plain_password, hashed_password)
+    return pwd_context.verify(salted_peppered_password, hashed_password)
 
 
-def get_password_hash(password):
-    logger.debug("Getting password hash")
-    return pwd_context.hash(password)
+def generate_password_hash(password, salt):
+    logger.debug("Generating password hash")
+    return pwd_context.hash(password + salt + config("DPB_PEPPER"))
 
 
 def get_user_by_email(username):

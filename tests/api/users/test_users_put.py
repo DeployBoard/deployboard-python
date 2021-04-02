@@ -9,7 +9,8 @@ client = TestClient(app)
 def test_create_user_valid_user(admin_token):
     body = {
         "email": "jdoe999@example.com",
-        "role": "Editor"
+        "role": "Editor",
+        "password": "secret"
     }
     put_response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert put_response.status_code == 200
@@ -29,7 +30,8 @@ def test_create_user_valid_user(admin_token):
 def test_create_user_existing_user(admin_token):
     body = {
         "email": "viewer@example.com",
-        "role": "Editor"
+        "role": "Editor",
+        "password": "secret"
     }
     response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert response.status_code == 400
@@ -49,7 +51,10 @@ def test_create_user_empty_body(admin_token):
 
 
 def test_create_user_invalid_body_missing_role(admin_token):
-    body = {"email": "test@example.com"}
+    body = {
+        "email": "test@example.com",
+        "password": "secret"
+    }
     response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert response.status_code == 422
     assert response.json()['detail'][0]['loc'] == ["body", "role"]
@@ -58,10 +63,25 @@ def test_create_user_invalid_body_missing_role(admin_token):
 
 
 def test_create_user_invalid_body_missing_email(admin_token):
-    body = {"role": "Viewer"}
+    body = {
+        "role": "Viewer",
+        "password": "secret"
+    }
     response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     assert response.status_code == 422
     assert response.json()['detail'][0]['loc'] == ["body", "email"]
+    assert response.json()['detail'][0]['msg'] == "field required"
+    assert response.json()['detail'][0]['type'] == "value_error.missing"
+
+
+def test_create_user_invalid_body_missing_password(admin_token):
+    body = {
+        "email": "test@example.com",
+        "role": "Viewer"
+    }
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['loc'] == ["body", "password"]
     assert response.json()['detail'][0]['msg'] == "field required"
     assert response.json()['detail'][0]['type'] == "value_error.missing"
 
@@ -75,7 +95,8 @@ def test_create_user_bad_token():
 def test_create_user_invalid_role(viewer_token, seed_data):
     body = {
         "email": "viewer@example.com",
-        "role": "Editor"
+        "role": "Editor",
+        "password": "secret"
     }
     response = client.put("/users/", headers={"Authorization": viewer_token}, json=body)
     assert response.status_code == 401

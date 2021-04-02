@@ -1,9 +1,10 @@
 import logging
-from datetime import datetime
+import secrets
+from datetime import datetime, timedelta
 from typing import List
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
-from util.auth import get_current_active_user, verify_role
+from util.auth import get_current_active_user, verify_role, generate_password_hash
 from util.response import check_response
 from models.users import CreateUser, User, UserResponse
 from db.mongo import db
@@ -30,8 +31,9 @@ async def get_users(current_user: User = Depends(get_current_active_user)):
     for user in db.users.find({"account": current_user['account']}):
         # Convert the _id to a string.
         user['_id'] = str(user['_id'])
-        # Remove hashed_password.
+        # Remove hashed_password and salt.
         user.pop('hashed_password', None)
+        user.pop('salt', None)
         # Check our user for unintended data.
         validated_user = check_response(current_user, user)
         # Append validated_user to the list.
@@ -58,8 +60,9 @@ async def get_user(_id, current_user: User = Depends(get_current_active_user)):
     user['_id'] = str(user['_id'])
     # Log our user for debugging.
     logger.debug(f"user: {user}")
-    # Remove hashed_password.
+    # Remove hashed_password and salt.
     user.pop('hashed_password', None)
+    user.pop('salt', None)
     # Check our user for unintended data.
     validated_user = check_response(current_user, user)
     # Log our validated_response for debugging.
@@ -99,13 +102,23 @@ async def create_user(user: CreateUser, current_user: User = Depends(get_current
     ts = datetime.utcnow().timestamp()
     user_dict['created_timestamp'] = ts
     user_dict['modified_timestamp'] = ts
+    # Generate an epoch to use for expiration timestamp.
+    # Set the time in the past that way it forces user to change password on next login.
+    expires = (datetime.utcnow() - timedelta(days=1)).timestamp()
+    user_dict['password_expires'] = expires
+    # Generate a salt for the user.
+    user_dict['salt'] = secrets.token_hex(16)
+    # Hash our password + salt + pepper.
+    user_dict['hashed_password'] = generate_password_hash(user_dict['password'], user_dict['salt'])
+    # Now that we have the hashed_password, we need to remove the plain text password from the user_dict.
+    user_dict.pop('password', None)
     # Put the new user_dict in the db.
     resp = db.users.insert_one(user_dict)
     # Return the inserted user id.
     return {'_id': str(resp.inserted_id)}
 
 
-# TODO: Create a post route that updates existing user: update_user()
+# TODO: Create a PATCH route that updates existing user: update_user()
 
 @router.delete("/{_id}")
 async def delete_user(_id, current_user: User = Depends(get_current_active_user)):

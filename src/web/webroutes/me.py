@@ -26,7 +26,7 @@ def me():
 @me_page.route('/', methods=['POST'])
 def update_me():
     """
-    Parses the request form and posts to our me api endpoint data into the me template
+    Parses the request form and sends a patch request to our me api endpoint.
     """
     # set our post data from request form.
     data = {
@@ -36,8 +36,8 @@ def update_me():
         'theme': request.form['theme']
     }
     try:
-        # Post data to our me api endpoint.
-        response = webapi('post', 'me/', token=session['token'], json=data)
+        # Send data to our me api endpoint.
+        response = webapi('patch', 'me/', token=session['token'], json=data)
         # Log for debugging
         logger.debug(f'me_response: {response}')
     except Exception as error:

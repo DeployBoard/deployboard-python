@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from api.util.auth import authenticate_user, verify_password, get_password_hash, get_api_key_in_header, verify_api_key
+from api.util.auth import authenticate_user, verify_password, generate_password_hash, get_api_key_in_header, verify_api_key
 from fastapi.exceptions import HTTPException
 
 def test_authenticate_user_valid():
@@ -40,8 +40,8 @@ def test_verify_password_failure():
     assert response is False
 
 
-def test_get_password_hash():
-    response = get_password_hash('testpassword')
+def test_generate_password_hash():
+    response = generate_password_hash('testpassword', "testsalt")
     assert response is not None
     assert type(response) == str
 

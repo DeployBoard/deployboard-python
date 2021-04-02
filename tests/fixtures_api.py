@@ -36,7 +36,8 @@ def viewer_token():
 def user(admin_token):
     body = {
         "email": "pytestuser@example.com",
-        "role": "Viewer"
+        "role": "Viewer",
+        "password": "secret"
     }
     response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
     resp = response.json()

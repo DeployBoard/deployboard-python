@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field, BaseModel
 from models.base import CustomBaseModel
 
 
@@ -32,6 +32,7 @@ class UserResponse(User):
     created_timestamp: float = None
     modified_timestamp: float = None
     modified_by: str = None
+    password_expires: float = None
 
     class Config:
         schema_extra = {
@@ -46,13 +47,16 @@ class UserResponse(User):
                 "enabled": True,
                 "created_timestamp": 1610053395,
                 "modified_timestamp": 1610053395,
-                "modified_by": "admin@example.com"
+                "modified_by": "admin@example.com",
+                "password_expires": 1610053395
             }
         }
 
 
 class UserInDB(User):
     hashed_password: str = None
+    salt: str = None
+    password_expires: float = None
 
     class Config:
         schema_extra = {
@@ -61,11 +65,13 @@ class UserInDB(User):
                 "schema_version": 1.0,
                 "account": "example",
                 "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+                "salt": "cgGmUECGkYRiKEcnuhyr",
                 "email": "jdoe@example.com",
                 "role": "Editor",
                 "first_name": "John",
                 "last_name": "Doe",
-                "enabled": True
+                "enabled": True,
+                "password_expires": 1610053395
             }
         }
 
@@ -76,6 +82,7 @@ class CreateUser(CustomBaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     enabled: bool = True
+    password: str
 
     class Config:
         schema_extra = {
@@ -84,7 +91,8 @@ class CreateUser(CustomBaseModel):
                 "role": "Editor",
                 "first_name": "John",
                 "last_name": "Doe2",
-                "enabled": True
+                "enabled": True,
+                "password": "secret"
             }
         }
 
@@ -96,6 +104,7 @@ class UpdateUserAsAdmin(CustomBaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     enabled: Optional[bool]
+    password: Optional[str]
 
     class Config:
         schema_extra = {
@@ -105,7 +114,8 @@ class UpdateUserAsAdmin(CustomBaseModel):
                 "role": "Viewer",
                 "first_name": "John",
                 "last_name": "Doe",
-                "enabled": False
+                "enabled": False,
+                "password": "supersecretpassword"
             }
         }
 
@@ -115,6 +125,7 @@ class UpdateUserAsSelf(BaseModel):
     last_name: Optional[str]
     theme: Optional[str]
     avatar: Optional[str]
+    password: Optional[str]
 
     class Config:
         schema_extra = {
@@ -122,6 +133,7 @@ class UpdateUserAsSelf(BaseModel):
                 "first_name": "John",
                 "last_name": "Doe",
                 "theme": "dark",
-                "avatar": "https://avatars.com/my_avatar.png"
+                "avatar": "https://avatars.com/my_avatar.png",
+                "password": "supersecretpassword"
             }
         }

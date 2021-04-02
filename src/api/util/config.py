@@ -8,7 +8,10 @@ def config(param):
     # Initialize our config.
     config_dic = {
         "MONGO_URI": None,
-        "MONGO_DATABASE": "deployboard"
+        "MONGO_DATABASE": "deployboard",
+        "APP_SECRET": "changeme",
+        "DPB_PEPPER": "changeme",
+        "DPB_PASSWORD_EXPIRES": 90
     }
 
     # Loop through our defaults.
