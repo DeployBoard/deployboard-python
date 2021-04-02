@@ -91,7 +91,6 @@ def get_me_info():
         logger.error(f"me error: {error}")
         # For now we just pass on without doing anything. We'll let the destination route throw error if that endpoint
         # is unable to load. This may change in the future.
-        pass
 
 
 @app.template_filter()
