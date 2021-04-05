@@ -7,8 +7,20 @@ client = TestClient(app)
 
 
 # GET /environments/
-def test_get_environments(admin_token):
+def test_get_environments_admin(admin_token):
     response = client.get("/environments/", headers={"Authorization": admin_token})
+    assert response.status_code == 200
+    assert type(response.json()) == list
+
+
+def test_get_environments_editor(editor_token):
+    response = client.get("/environments/", headers={"Authorization": editor_token})
+    assert response.status_code == 200
+    assert type(response.json()) == list
+
+
+def test_get_environments_viewer(viewer_token):
+    response = client.get("/environments/", headers={"Authorization": viewer_token})
     assert response.status_code == 200
     assert type(response.json()) == list
 

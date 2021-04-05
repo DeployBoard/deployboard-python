@@ -22,7 +22,7 @@ async def get_environments(current_user: User = Depends(get_current_active_user)
     Gets all environments from the requester account.
     """
     # Verify the user has the allowed role.
-    verify_role(current_user, ["User", "Editor", "Admin"])
+    verify_role(current_user, ["Viewer", "Editor", "Admin"])
     # Try our db query.
     try:
         # Find our account.
