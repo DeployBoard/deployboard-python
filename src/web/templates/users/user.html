@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Settings</h2>
+</div>
+
+<div class="container">
+  {% include "settings_nav.html" %}
+
+  {% if error %}
+  <div>{{ error }}</div>
+  {% endif %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Role</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Enabled</th>
+        <th>Created Timestamp (UTC)</th>
+        <th>Modified Timestamp (UTC)</th>
+        <th>Modified By</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if user %}
+      <tr>
+        <td>{{ user['email'] }}</td>
+        <td>{{ user['role'] }}</td>
+        <td>{{ user['first_name'] }}</td>
+        <td>{{ user['last_name'] }}</td>
+        <td>{{ user['enabled'] }}</td>
+        <td>{{ user['created_timestamp'] | epoch_to_date }}</td>
+        <td>{{ user['modified_timestamp'] | epoch_to_date }}</td>
+        <td>{{ user['modified_by'] }}</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+  <button type="button" class="float-right btn-sm btn-primary" data-toggle="modal" data-target="#EditUserModal">
+    Edit User
+  </button>
+  <button type="button" class="float-right btn-sm btn-danger" data-toggle="modal" data-target="#DeleteUserModal">
+    Delete User
+  </button>
+</div>
+
+{% if user %}
+  {% include "users/edit_user_modal.html" %}
+  {% include "users/delete_user_modal.html" %}
+{% endif %}
+
+{% endblock %}

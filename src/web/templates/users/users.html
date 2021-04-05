@@ -13,7 +13,6 @@
   <div>{{ error }}</div>
   {% endif %}
 
-
   <table>
     <thead>
       <tr>
@@ -53,25 +52,12 @@
           </a>
         </td>
       </tr>
-      {% with
-        user_id=user['_id'],
-        user_email=user['email'],
-        user_role=user['role'],
-        user_first_name=user['first_name'],
-        user_last_name=user['last_name'],
-        user_enabled=user['enabled']
-      %}
-        {% include "users/edit_user_modal.html" %}
-        {% include "users/delete_user_modal.html" %}
-      {% endwith %}
       {% endfor %}
       {% endif %}
     </tbody>
   </table>
 </div>
 
-{#{% include "users/add_user_modal.html" %}#}
-{#{% include "users/edit_user_modal.html" %}#}
-{% include "users/delete_user_modal.html" %}
+{% include "users/add_user_modal.html" %}
 
 {% endblock %}
