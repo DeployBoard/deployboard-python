@@ -1,0 +1,43 @@
+<div class="modal fade" id="AddUserModal" tabindex="-1" role="dialog" aria-labelledby="AddUserModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AddUserModalTitle">Add User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-group" action="{{ url_for('users_page.users_post') }}" method=post>
+        <div class="modal-body">
+          <!-- User Email -->
+          <label for="user_email" class="col-form-label">Email:</label>
+          <input type="email" class="form-control" placeholder="Email" name="user_email" id="user_first_name" value="{{ request.form.user_email }}" required autofocus/>
+          <!-- User Role-->
+          <label for="user_role" class="col-form-label">Role:</label>
+          <select class="form-control" name="user_role" id="user_role">
+            <option selected value="Viewer">Viewer</option>
+            <option value="Editor">Editor</option>
+            <option value="Admin">Admin</option>
+          </select>
+          <!-- User First Name -->
+          <label for="user_first_name" class="col-form-label">First Name:</label>
+          <input type="text" class="form-control" placeholder="First Name" name="user_first_name" id="user_first_name" value="{{ request.form.user_first_name }}"/>
+          <!-- User Last Name -->
+          <label for="user_last_name" class="col-form-label">Last Name:</label>
+          <input type="text" class="form-control" placeholder="Last Name" name="user_last_name" id="user_last_name" value="{{ request.form.user_last_name }}"/>
+          <!-- User Password-->
+          <label for="user_password" class="col-form-label">Password:</label>
+          <input type="password" class="form-control" placeholder="password" name="user_password" id="user_password" value="{{ request.form.user_password }}"/>
+          <!-- Action -->
+          <input type="hidden" name="action" value="add"/>
+          <!-- CSRF Token -->
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <input type=submit value="Submit" name="Add User" class="btn btn-primary"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

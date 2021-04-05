@@ -6,7 +6,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 from util.auth import get_current_active_user, verify_role, generate_password_hash
 from util.response import check_response
-from models.users import CreateUser, User, UserResponse
+from models.users import CreateUser, User, UserResponse, UpdateUserAsAdmin
 from db.mongo import db
 
 logger = logging.getLogger(__name__)
@@ -118,7 +118,50 @@ async def create_user(user: CreateUser, current_user: User = Depends(get_current
     return {'_id': str(resp.inserted_id)}
 
 
-# TODO: Create a PATCH route that updates existing user: update_user()
+@router.patch("/{_id}")
+async def update_user(_id, user: UpdateUserAsAdmin, current_user: User = Depends(get_current_active_user)):
+    """
+    Updates specific user from the requester account.
+    """
+    # Verify the user has the allowed role.
+    verify_role(current_user, ["Admin"])
+    # We can't insert the model, so we have to convert to dict.
+    user_dict = user.dict()
+    # Set our updates.
+    updates = {}
+    # Loop through the payload for non empty values.
+    for key in user_dict:
+        if user_dict[key] is not None:
+            # Add to the updates dict.
+            updates[key] = user_dict[key]
+    # Log for debugging.
+    logger.debug(f'updates: {updates}')
+    # Check if our updates dict is empty since all fields are optional.
+    if not updates:
+        # Skip the DB call, we aren't making any updates.
+        return {"modified_count": "0"}
+    # Handle if password was passed
+    if 'password' in updates:
+        # Generate an epoch to use for expiration timestamp.
+        # Set the time in the past that way it forces user to change password on next login.
+        expires = (datetime.utcnow() - timedelta(days=1)).timestamp()
+        updates['password_expires'] = expires
+        # Generate a new salt for the user.
+        updates['salt'] = secrets.token_hex(16)
+        # Hash our password + salt + pepper.
+        updates['hashed_password'] = generate_password_hash(updates['password'], updates['salt'])
+        # Now that we have the hashed_password, we need to remove the plain text password from the user_dict.
+        updates.pop('password', None)
+    # Make our update request to the db.
+    response = db.users.update_one({"_id": ObjectId(_id)}, {"$set": updates})
+    # Log response for debugging.
+    logger.debug(f"user: {response.raw_result}")
+    if response.matched_count == 0:
+        # Raise exception if user not found.
+        raise HTTPException(status_code=404, detail="User not found.")
+    # Return success.
+    return {'status': 'Updated successfully.'}
+
 
 @router.delete("/{_id}")
 async def delete_user(_id, current_user: User = Depends(get_current_active_user)):

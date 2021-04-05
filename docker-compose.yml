@@ -39,7 +39,7 @@ services:
       - PYTHONUNBUFFERED=1
       - APP_SECRET=changeme
       - LOG_LEVEL=debug
-      - DPB_DEBUG=True
+      - DPB_WEB_DEBUG=True
       - FLASK_APP=web
 
   docs:

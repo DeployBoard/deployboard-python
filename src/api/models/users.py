@@ -97,8 +97,7 @@ class CreateUser(CustomBaseModel):
         }
 
 
-class UpdateUserAsAdmin(CustomBaseModel):
-    _id: str = None
+class UpdateUserAsAdmin(BaseModel):
     email: Optional[EmailStr]
     role: Optional[str]
     first_name: Optional[str]
@@ -109,7 +108,6 @@ class UpdateUserAsAdmin(CustomBaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "_id": "5fe14013fc83e4c8f18ff9b5",
                 "email": "jdoe@example.com",
                 "role": "Viewer",
                 "first_name": "John",
