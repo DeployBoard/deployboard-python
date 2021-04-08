@@ -5,7 +5,7 @@ from api.main import app
 client = TestClient(app)
 
 
-# PUY /users/
+# PUT /users/
 def test_create_user_valid_user(admin_token):
     body = {
         "email": "jdoe999@example.com",
