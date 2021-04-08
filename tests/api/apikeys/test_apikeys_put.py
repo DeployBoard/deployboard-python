@@ -1,5 +1,7 @@
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
+from unittest.mock import patch
 from api.main import app
 
 client = TestClient(app)
@@ -73,9 +75,16 @@ def test_create_apikey_invalid_role(viewer_token):
     assert response.json() == {"detail": "Unauthorized"}
 
 
-# TODO: Mock the mongodb exception in the try:expect
-# def test_create_apikey_mongo_exception(admin_token):
-#     with patch('foo.call_api', side_effect=Exception('mocked error')):
-#         with pytest.raises(Exception) as excinfo:
-#         #     create_key('localhost:8080', 'spam', 'eggs')
-#         assert excinfo.value.message == 'mocked error'
+# @patch('api.routes.apikeys.db')
+# def test_create_apikey_exception(mock, admin_token):
+#     body = {
+#         "name": "pytest-exception",
+#         "role": "Editor"
+#     }
+#     mock.apikeys.insert_one.side_effect = Exception('mock')
+#     with pytest.raises(HTTPException):
+#         response = client.put("/apikeys/", headers={"Authorization": admin_token}, json=body)
+#         assert response.json() is None
+#         assert type(response) is HTTPException
+#         assert response.status_code == 500
+#         assert response.json()['detail'] == "Unexpected error occurred. mock"

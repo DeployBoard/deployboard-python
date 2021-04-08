@@ -69,11 +69,11 @@ def test_verify_api_key_invalid():
     assert excinfo.value.detail == 'Could not validate credentials.'
 
 
-@pytest.mark.skip(reason="This is not raising Exception as expected.")
-@patch("util.auth.db", side_effect=Exception('mock'))
+@patch("api.util.auth.db")
 def test_verify_api_key_exception(mock, apikey):
+    mock.apikeys.find_one.side_effect = Exception('mock')
     with pytest.raises(HTTPException) as excinfo:
         verify_api_key(apikey)
-    assert excinfo.type == HTTPException
-    assert excinfo.value.status_code == 500
-    assert excinfo.value.detail == 'Unexpected error occurred.'
+        assert type(excinfo) == HTTPException
+        assert excinfo.value.status_code == 500
+        assert excinfo.value.detail == 'Unexpected error occurred.'

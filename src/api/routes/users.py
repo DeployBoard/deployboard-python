@@ -6,6 +6,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 from util.auth import get_current_active_user, verify_role, generate_password_hash
 from util.response import check_response
+from util.password_policy import check_password_policy
 from models.users import CreateUser, User, UserResponse, UpdateUserAsAdmin
 from db.mongo import db
 
@@ -98,6 +99,8 @@ async def create_user(user: CreateUser, current_user: User = Depends(get_current
     # We get the requesting user data from current_user.
     user_dict['created_by'] = current_user['email']
     user_dict['modified_by'] = current_user['email']
+    # Check to see if the password meets the account's policy.
+    check_password_policy(user_dict['account'], user_dict['password'])
     # Generate an epoch to use for created and modified timestamp.
     ts = datetime.utcnow().timestamp()
     user_dict['created_timestamp'] = ts
@@ -142,6 +145,8 @@ async def update_user(_id, user: UpdateUserAsAdmin, current_user: User = Depends
         return {"modified_count": "0"}
     # Handle if password was passed
     if 'password' in updates:
+        # Check to see if the password meets the account's policy.
+        check_password_policy(current_user['account'], updates['password'])
         # Generate an epoch to use for expiration timestamp.
         # Set the time in the past that way it forces user to change password on next login.
         expires = (datetime.utcnow() - timedelta(days=1)).timestamp()
