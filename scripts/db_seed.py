@@ -35,7 +35,14 @@ def create_account():
         "schema_version": 1.0,
         "account": "Example",
         "environments": ["Prod", "Stage", "Dev"],
-        "created_timestamp": 1610053395
+        "created_timestamp": 1610053395,
+        "password_policy": {
+            "length": 6,
+            "lowercase": 0,
+            "uppercase": 0,
+            "number": 0,
+            "special": 0
+        }
     }
     # Insert the user into the db.
     insert_resp = db.accounts.insert_one(account_dict)
