@@ -5,6 +5,7 @@
 pytest==6.2.1
 pytest-cov==2.11.1
 pytest-order==0.9.3
+pytest-asyncio==0.14.0
 
 # MongoDB - In memory for tests
 pymongo_inmemory==0.1.5
