@@ -13,6 +13,12 @@ def test_delete_service_valid(admin_token, service):
     assert '_id' in response.json()
 
 
+def test_delete_service_none(admin_token, service):
+    response = client.delete("/services/000000000000000000000000", headers={"Authorization": admin_token})
+    assert response.status_code == 404
+    assert response.json()['detail'] == "Service Not Found."
+
+
 def test_delete_service_empty(admin_token):
     response = client.delete(f"/services/", headers={"Authorization": admin_token})
     assert response.status_code == 405
@@ -38,7 +44,3 @@ def test_delete_service_invalid_role(viewer_token, service):
     response = client.delete(f"/services/{service}", headers={"Authorization": viewer_token})
     assert response.status_code == 401
     assert response.json() == {"detail": "Unauthorized"}
-
-
-# TODO: Mock the mongodb exception in the try:expect
-# def test_create_service_mongo_exception(admin_token):

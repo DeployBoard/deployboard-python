@@ -1,6 +1,9 @@
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from api.main import app
+from unittest.mock import patch
+from api.routes.logs import get_one_log
 
 client = TestClient(app)
 
@@ -41,3 +44,21 @@ def test_get_log_invalid_log_id(admin_token):
     assert response.json() == {
         "detail": "'foo' is not a valid ObjectId, it must be a 12-byte input or a 24-character hex string"
     }
+
+
+@pytest.mark.asyncio
+@patch('api.routes.logs.db')
+async def test_get_log_exception(mock):
+    user = {
+        "account": "Example",
+        "name": "pytestuser",
+        "role": "Admin",
+        "email": "pytestuser@example.com"
+    }
+    mock.logs.find_one.side_effect = Exception('mock')
+    with pytest.raises(HTTPException):
+        response = await get_one_log('000000000000000000000000', user)
+        # TODO: This test covers the exception, but does not enforce these assertions.
+        assert type(response) is HTTPException
+        assert response.status_code == 500
+        assert response.json()['detail'] == "Unexpected error occurred. mock"

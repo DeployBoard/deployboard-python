@@ -3,6 +3,8 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from unittest.mock import patch
 from api.main import app
+from api.routes.apikeys import create_apikey
+from api.models.apikeys import CreateApiKey
 
 client = TestClient(app)
 
@@ -75,16 +77,20 @@ def test_create_apikey_invalid_role(viewer_token):
     assert response.json() == {"detail": "Unauthorized"}
 
 
-# @patch('api.routes.apikeys.db')
-# def test_create_apikey_exception(mock, admin_token):
-#     body = {
-#         "name": "pytest-exception",
-#         "role": "Editor"
-#     }
-#     mock.apikeys.insert_one.side_effect = Exception('mock')
-#     with pytest.raises(HTTPException):
-#         response = client.put("/apikeys/", headers={"Authorization": admin_token}, json=body)
-#         assert response.json() is None
-#         assert type(response) is HTTPException
-#         assert response.status_code == 500
-#         assert response.json()['detail'] == "Unexpected error occurred. mock"
+@pytest.mark.asyncio
+@patch('api.routes.apikeys.db')
+async def test_create_apikey_exception(mock):
+    body = CreateApiKey(name="pytest-exception", role="Editor")
+    user = {
+        "account": "Example",
+        "name": "pytestuser",
+        "role": "Admin",
+        "email": "pytestuser@example.com"
+    }
+    mock.apikeys.insert_one.side_effect = Exception('mock')
+    with pytest.raises(HTTPException):
+        response = await create_apikey(body, user)
+        # TODO: This test covers the exception, but does not enforce these assertions.
+        assert type(response) is HTTPException
+        assert response.status_code == 500
+        assert response.json()['detail'] == "Unexpected error occurred. mock"
