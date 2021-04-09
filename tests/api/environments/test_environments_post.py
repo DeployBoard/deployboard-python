@@ -1,7 +1,10 @@
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from api.main import app
 from unittest.mock import patch
+from api.routes.environments import update_environment
+from api.models.environments import UpdateEnvironment
 
 client = TestClient(app)
 
@@ -41,12 +44,20 @@ def test_post_environments_invalid_body(admin_token):
     assert response.status_code == 422
 
 
-@pytest.mark.skip(reason="The Mock is not triggering the exception.")
-@patch("db.mongo.db.accounts")
-def test_post_environments_exception(mock_db, admin_token):
-    body = {'environments': ["Production", "Test", "Dev"]}
-    mock_db.side_effect = Exception('ConnectionFailure')
-    response = client.post("/environments/", headers={"Authorization": admin_token}, json=body)
-    assert response.status_code == 500
-    assert response.json() == {"detail": "Unexpected error occurred."}
-    assert mock_db.called_once()
+@pytest.mark.asyncio
+@patch('api.routes.environments.db')
+async def test_post_environments_exception(mock):
+    body = UpdateEnvironment(environments=["mock"])
+    user = {
+        "account": "Example",
+        "name": "pytestuser",
+        "role": "Admin",
+        "email": "pytestuser@example.com"
+    }
+    mock.accounts.update_one.side_effect = Exception('mock')
+    with pytest.raises(HTTPException):
+        response = await update_environment(body, user)
+        # TODO: This test covers the exception, but does not enforce these assertions.
+        assert type(response) is HTTPException
+        assert response.status_code == 500
+        assert response.json()['detail'] == "Unexpected error occurred. mock"

@@ -81,9 +81,5 @@ async def update_environment(environment: UpdateEnvironment, current_user: User 
         # Raise exception.
         raise HTTPException(status_code=500, detail=f"Unexpected error occurred. {e}")
 
-    if resp.modified_count > 1 or resp.matched_count > 1:
-        # Log error.
-        logger.critical('We somehow updated more than one item.')
-
     # Return success.
     return {'detail': 'Environments updated successfully.'}

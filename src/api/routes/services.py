@@ -59,13 +59,13 @@ async def get_one_service(_id: str, current_user: User = Depends(get_current_act
     except Exception as e:
         # Log our exception for debugging.
         logger.error(e)
-        raise HTTPException(status_code=404, detail=f"{_id} not found")
+        raise HTTPException(status_code=500, detail=f"Unexpected error occurred. {e}")
     # find_one() returns NoneType if not found, so we need to catch that case and Raise exception.
     if service is None:
-        raise HTTPException(status_code=404, detail=f"{_id} not found")
+        raise HTTPException(status_code=404, detail=f"{_id} not found.")
     # Raise exception if id not found in service
     if '_id' not in service:
-        raise HTTPException(status_code=404, detail=f"{_id} not found")
+        raise HTTPException(status_code=404, detail=f"{_id} not found.")
     # Convert the _id to a string.
     service['_id'] = str(service['_id'])
     # Print our document for debugging.
@@ -107,32 +107,33 @@ async def create_service(body: NewService, current_user: User = Depends(get_curr
     return {'_id': str(resp.inserted_id)}
 
 
-# TODO: Not done yet, query existing object, make a nice update, then perform db.update()
-@router.post("/")
-async def update_service(body: Service, current_user: User = Depends(get_current_active_user)):
-    """
-    Updates an existing service.
-    """
-    body_dict = body.dict()
-    response = ''
-    # Verify the user has the allowed role.
-    verify_role(current_user, ["Editor", "Admin"])
-    # Log item in request for debugging.
-    logger.debug(f"body: {body_dict}")
-    # Attempt to update an item, passing upsert which will create object if does not exist.
-    try:
-        response = db.services.update(
-            {"account": current_user['account'], "service": body_dict['service']},
-            body_dict,
-            upsert=True
-        )
-    except Exception as e:
-        # Log our exception for debugging.
-        logger.error(f"e: {e}")
-        # Raise exception if failed to insert.
-        raise HTTPException(status_code=500, detail="Unexpected error occurred.")
-
-    return response
+# # TODO: Not done yet, query existing object, make a nice update, then perform db.update()
+# Should this be a patch instead of post?
+# @router.post("/")
+# async def update_service(body: Service, current_user: User = Depends(get_current_active_user)):
+#     """
+#     Updates an existing service.
+#     """
+#     body_dict = body.dict()
+#     response = ''
+#     # Verify the user has the allowed role.
+#     verify_role(current_user, ["Editor", "Admin"])
+#     # Log item in request for debugging.
+#     logger.debug(f"body: {body_dict}")
+#     # Attempt to update an item, passing upsert which will create object if does not exist.
+#     try:
+#         response = db.services.update(
+#             {"account": current_user['account'], "service": body_dict['service']},
+#             body_dict,
+#             upsert=True
+#         )
+#     except Exception as e:
+#         # Log our exception for debugging.
+#         logger.error(f"e: {e}")
+#         # Raise exception if failed to insert.
+#         raise HTTPException(status_code=500, detail="Unexpected error occurred.")
+#
+#     return response
 
 
 @router.delete("/{_id}")
