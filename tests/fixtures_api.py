@@ -43,6 +43,31 @@ def user(admin_token):
     resp = response.json()
     return resp['_id']
 
+
+@pytest.fixture(scope="session")
+def user_editor(admin_token):
+    body = {
+        "email": "pytestusereditor@example.com",
+        "role": "Editor",
+        "password": "secret"
+    }
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
+    resp = response.json()
+    return resp['_id']
+
+
+@pytest.fixture(scope="session")
+def user_admin(admin_token):
+    body = {
+        "email": "pytestuseradmin@example.com",
+        "role": "Admin",
+        "password": "secret"
+    }
+    response = client.put("/users/", headers={"Authorization": admin_token}, json=body)
+    resp = response.json()
+    return resp['_id']
+
+
 @pytest.fixture(scope="session")
 def apikey(admin_token):
     body = {
