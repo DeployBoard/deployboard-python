@@ -67,10 +67,10 @@ def update_user_in_db(query, update_command):
         resp = db.users.update_one(query, update_command)
         # Log for debugging.
         logger.debug(f"resp: {resp}")
-        # Return the modified count.
-        return {'modified_count': str(resp.modified_count)}
     except Exception as e:
         # Log error
         logger.error(f"Exception: {e}")
         # Raise exception if user not found.
         raise HTTPException(status_code=500, detail="Unexpected error occurred.")
+    # Return the modified count.
+    return {'modified_count': str(resp.modified_count)}
