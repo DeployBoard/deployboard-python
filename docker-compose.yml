@@ -23,6 +23,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - APP_SECRET=changeme
+      - LOG_LEVEL=DEBUG
       - MONGO_URI=mongodb://db:27017
       - DPB_ACCOUNT=DeployBoard
 

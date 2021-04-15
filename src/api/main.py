@@ -1,10 +1,11 @@
 import logging
+import time
 from fastapi import FastAPI, Request
 from routes import token, deploy, services, logs, users, me, apikeys, environments, hc
-import time
+from util.config import config
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=config('LOG_LEVEL').upper())
 
 app = FastAPI(
     title="DeployBoard",
