@@ -9,6 +9,7 @@ def config(param):
     config_dic = {
         "MONGO_URI": None,
         "MONGO_DATABASE": "deployboard",
+        "LOG_LEVEL": "WARNING",
         "APP_SECRET": "changeme",
         "DPB_PEPPER": "changeme",
         "DPB_PASSWORD_EXPIRES": 90
