@@ -1,6 +1,3 @@
-import pytest
-from unittest.mock import patch
-from fastapi import HTTPException
 from src.api.routes.deploy import get_previous_log_hash
 
 
@@ -12,11 +9,12 @@ def test_deploy_get_previous_log_hash_new_log():
 
 
 def test_deploy_get_previous_log_hash_existing_log():
-    # Note this is the same as the above test, so there should be an existing sha256 hash to return.
+    # Note this is the same as the above test,
+    # so there should be an existing sha256 hash to return.
     response = get_previous_log_hash("Example", "Sample", "Api", "Dev")
     assert type(response) is str
     assert len(response) == 64
-    assert response is not ''
+    assert response != ""
 
 
 # TODO: Mock the db response so there are 2 returned so we raise the critical error.

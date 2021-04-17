@@ -1,4 +1,5 @@
 from typing import Optional
+
 from models.base import CustomBaseModel
 
 
@@ -18,9 +19,6 @@ class DeploymentRequest(CustomBaseModel):
                 "environment": "Prod",
                 "status": "Deploying",
                 "version": "v1.0.2",
-                "custom": {
-                    "module": "example-module",
-                    "user": "JohnDoe"
-                }
+                "custom": {"module": "example-module", "user": "JohnDoe"},
             }
         }

@@ -1,6 +1,7 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
+
 from models.base import CustomBaseModel
+from pydantic import BaseModel, Field
 
 
 class ServiceEnvironment(BaseModel):
@@ -15,10 +16,7 @@ class ServiceEnvironment(BaseModel):
                 "status": "Deployed",
                 "version": "1.2.1",
                 "timestamp": 1608633640,
-                "custom": {
-                    "module": "foo",
-                    "color": "green"
-                }
+                "custom": {"module": "foo", "color": "green"},
             }
         }
 
@@ -34,7 +32,7 @@ class NewService(CustomBaseModel):
                 "service": "API",
                 "application": "DeployBoard",
                 "tags": [],
-                "environments": {}
+                "environments": {},
             }
         }
 
@@ -57,27 +55,21 @@ class Service(NewService):
                         "status": "Deployed",
                         "version": "1.2.1",
                         "timestamp": 1608633640,
-                        "custom": {
-                            "module": "foo",
-                            "color": "green"
-                        }
+                        "custom": {"module": "foo", "color": "green"},
                     },
                     "Prod": {
                         "status": "Deployed",
                         "version": "1.2.0",
                         "timestamp": 1608623640,
-                        "custom": {
-                            "module": "foo",
-                            "color": "green"
-                        }
-                    }
-                }
+                        "custom": {"module": "foo", "color": "green"},
+                    },
+                },
             }
         }
 
 
 class ServiceResponse(Service):
-    id: str = Field(..., alias='_id')
+    id: str = Field(..., alias="_id")
 
     class Config:
         arbitrary_types_allowed = True
@@ -94,20 +86,14 @@ class ServiceResponse(Service):
                         "status": "Deployed",
                         "version": "1.2.1",
                         "timestamp": 1608633640,
-                        "custom": {
-                            "module": "foo",
-                            "color": "green"
-                        }
+                        "custom": {"module": "foo", "color": "green"},
                     },
                     "Prod": {
                         "status": "Deployed",
                         "version": "1.2.0",
                         "timestamp": 1608623640,
-                        "custom": {
-                            "module": "foo",
-                            "color": "green"
-                        }
-                    }
-                }
+                        "custom": {"module": "foo", "color": "green"},
+                    },
+                },
             }
         }

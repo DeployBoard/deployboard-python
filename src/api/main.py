@@ -1,17 +1,13 @@
 import logging
 import time
+
 from fastapi import FastAPI, Request
-from routes import token, deploy, services, logs, users, me, apikeys, environments, hc
+from routes import apikeys, deploy, environments, hc, logs, me, services, token, users
 from util.config import config
 
+logging.basicConfig(level=config("LOG_LEVEL").upper())
 
-logging.basicConfig(level=config('LOG_LEVEL').upper())
-
-app = FastAPI(
-    title="DeployBoard",
-    description="Deployment Tracking",
-    version="0.1.0"
-)
+app = FastAPI(title="DeployBoard", description="Deployment Tracking", version="0.1.0")
 
 
 @app.middleware("http")

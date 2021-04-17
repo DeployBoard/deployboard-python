@@ -1,5 +1,5 @@
-import pytest
 from fastapi.testclient import TestClient
+
 from api.main import app
 
 client = TestClient(app)
@@ -11,7 +11,7 @@ def test_get_users(admin_token):
     assert response.status_code == 200
     # TODO: Can we assert == model?
     assert type(response.json()) == list
-    assert 'hashed_password' not in response.json()[0]
+    assert "hashed_password" not in response.json()[0]
 
 
 def test_get_users_bad_token():

@@ -12,7 +12,7 @@ def config(param):
         "LOG_LEVEL": "WARNING",
         "APP_SECRET": "changeme",
         "DPB_PEPPER": "changeme",
-        "DPB_PASSWORD_EXPIRES": 90
+        "DPB_PASSWORD_EXPIRES": 90,
     }
 
     # Loop through our defaults.

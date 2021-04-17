@@ -10,7 +10,7 @@ def test_deploy_insert_to_logs():
         "service": "PyTestDeployService",
         "environment": "PyTest",
         "status": "Deploying",
-        "version": "v1.0.2"
+        "version": "v1.0.2",
     }
     response = insert_to_logs(log)
     # TODO: Query the db to make sure the log write was as expected.

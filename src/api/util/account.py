@@ -1,7 +1,7 @@
 import logging
-from fastapi import HTTPException
-from db.mongo import db
 
+from db.mongo import db
+from fastapi import HTTPException
 
 logger = logging.getLogger(__name__)
 
@@ -14,10 +14,10 @@ def get_account(account):
         # Find our account.
         response = db.accounts.find_one({"account": account})
         # Log for debugging.
-        logger.debug(f'response: {response}')
+        logger.debug(f"response: {response}")
     except Exception as e:
         # Log error.
-        logger.error(f'error: {e}')
+        logger.error(f"error: {e}")
         # Raise exception.
         raise HTTPException(status_code=500, detail=f"Unexpected error occurred: {e}.")
     # Verify we found an account.

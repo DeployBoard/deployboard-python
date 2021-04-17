@@ -1,6 +1,7 @@
 from typing import Optional
-from pydantic import EmailStr, Field
+
 from models.base import CustomBaseModel
+from pydantic import EmailStr, Field
 
 
 class ApiKey(CustomBaseModel):
@@ -24,13 +25,13 @@ class ApiKey(CustomBaseModel):
                 "created_by": "jdoe@example.com",
                 "created_timestamp": 1610053395,
                 "modified_by": "admin@example.com",
-                "modified_timestamp": 1610921529
+                "modified_timestamp": 1610921529,
             }
         }
 
 
 class ApiKeyResponse(ApiKey):
-    id: str = Field(..., alias='_id')
+    id: str = Field(..., alias="_id")
 
     class Config:
         schema_extra = {
@@ -44,7 +45,7 @@ class ApiKeyResponse(ApiKey):
                 "created_by": "jdoe@example.com",
                 "created_timestamp": 1610053395,
                 "modified_by": "admin@example.com",
-                "modified_timestamp": 1610921529
+                "modified_timestamp": 1610921529,
             }
         }
 
@@ -55,12 +56,7 @@ class CreateApiKey(CustomBaseModel):
     enabled: Optional[bool] = Field(True, const=True)
 
     class Config:
-        schema_extra = {
-            "example": {
-                "name": "test-api-key",
-                "role": "Editor"
-            }
-        }
+        schema_extra = {"example": {"name": "test-api-key", "role": "Editor"}}
 
 
 class UpdateApiKey(CustomBaseModel):
@@ -75,6 +71,6 @@ class UpdateApiKey(CustomBaseModel):
                 "_id": "5fe14013fc83e4c8f18ff9b5",
                 "name": "test-api-key",
                 "role": "Editor",
-                "enabled": False
+                "enabled": False,
             }
         }

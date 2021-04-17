@@ -1,6 +1,7 @@
 from typing import Optional
-from pydantic import EmailStr, Field, BaseModel
+
 from models.base import CustomBaseModel
+from pydantic import BaseModel, EmailStr, Field
 
 
 class User(CustomBaseModel):
@@ -22,13 +23,13 @@ class User(CustomBaseModel):
                 "role": "Editor",
                 "first_name": "John",
                 "last_name": "Doe",
-                "enabled": True
+                "enabled": True,
             }
         }
 
 
 class UserResponse(User):
-    id: str = Field(..., alias='_id')
+    id: str = Field(..., alias="_id")
     created_timestamp: float = None
     modified_timestamp: float = None
     modified_by: str = None
@@ -48,7 +49,7 @@ class UserResponse(User):
                 "created_timestamp": 1610053395,
                 "modified_timestamp": 1610053395,
                 "modified_by": "admin@example.com",
-                "password_expires": 1610053395
+                "password_expires": 1610053395,
             }
         }
 
@@ -64,14 +65,16 @@ class UserInDB(User):
                 "_id": "5fe51081e178d1bda551cc2a",
                 "schema_version": 1.0,
                 "account": "example",
-                "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+                "hashed_password": (
+                    "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW"
+                ),
                 "salt": "cgGmUECGkYRiKEcnuhyr",
                 "email": "jdoe@example.com",
                 "role": "Editor",
                 "first_name": "John",
                 "last_name": "Doe",
                 "enabled": True,
-                "password_expires": 1610053395
+                "password_expires": 1610053395,
             }
         }
 
@@ -92,7 +95,7 @@ class CreateUser(CustomBaseModel):
                 "first_name": "John",
                 "last_name": "Doe2",
                 "enabled": True,
-                "password": "secret"
+                "password": "secret",
             }
         }
 
@@ -113,7 +116,7 @@ class UpdateUserAsAdmin(BaseModel):
                 "first_name": "John",
                 "last_name": "Doe",
                 "enabled": False,
-                "password": "supersecretpassword"
+                "password": "supersecretpassword",
             }
         }
 
@@ -132,6 +135,6 @@ class UpdateUserAsSelf(BaseModel):
                 "last_name": "Doe",
                 "theme": "dark",
                 "avatar": "https://avatars.com/my_avatar.png",
-                "password": "supersecretpassword"
+                "password": "supersecretpassword",
             }
         }

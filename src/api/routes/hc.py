@@ -1,12 +1,11 @@
+import logging
+
 from fastapi import APIRouter
 
-import logging
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
-    prefix="/hc",
-    tags=["HealthCheck"],
-    responses={404: {"description": "Not found"}}
+    prefix="/hc", tags=["HealthCheck"], responses={404: {"description": "Not found"}}
 )
 
 

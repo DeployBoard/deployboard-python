@@ -1,18 +1,19 @@
+import logging
 from typing import List
+
+from db.mongo import db
 from fastapi import APIRouter, Depends, HTTPException
-from util.auth import get_current_active_user, verify_role
-from util.response import check_response
 from models.environments import UpdateEnvironment
 from models.users import User
-from db.mongo import db
+from util.auth import get_current_active_user, verify_role
+from util.response import check_response
 
-import logging
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/environments",
     tags=["Environments"],
-    responses={404: {"description": "Not found"}}
+    responses={404: {"description": "Not found"}},
 )
 
 
@@ -26,34 +27,35 @@ async def get_environments(current_user: User = Depends(get_current_active_user)
     # Try our db query.
     try:
         # Find our account.
-        response = db.accounts.find_one({"account": current_user['account']})
+        response = db.accounts.find_one({"account": current_user["account"]})
         # Log for debugging.
-        logger.debug(f'response: {response}')
+        logger.debug(f"response: {response}")
     except Exception as e:
         # Log error.
-        logger.error(f'error: {e}')
+        logger.error(f"error: {e}")
         # Raise exception.
         raise HTTPException(status_code=500, detail="Unexpected error occurred.")
     # Instantiate response data object with our returned account for validation.
-    data = {
-        'account': response['account']
-    }
+    data = {"account": response["account"]}
     # If environments in our response add it.
-    if 'environments' in response:
+    if "environments" in response:
         # Add our environments to the data object.
-        data['environments'] = response['environments']
+        data["environments"] = response["environments"]
     # Log for debugging.
-    logger.debug(f'environment data: {data}')
+    logger.debug(f"environment data: {data}")
     # Check our user for unintended data.
     validated_data = check_response(current_user, data)
     # Log our validated_response for debugging.
-    logger.debug(f'validated_data: {validated_data}')
+    logger.debug(f"validated_data: {validated_data}")
     # Return the validate_data to the client.
-    return validated_data['environments']
+    return validated_data["environments"]
 
 
 @router.post("/")
-async def update_environment(environment: UpdateEnvironment, current_user: User = Depends(get_current_active_user)):
+async def update_environment(
+    environment: UpdateEnvironment,
+    current_user: User = Depends(get_current_active_user),
+):
     """
     Updates environment list.
     """
@@ -62,19 +64,20 @@ async def update_environment(environment: UpdateEnvironment, current_user: User 
     # We can't insert the model, so we have to convert to dict.
     environment_dict = environment.dict()
     # Log for debugging.
-    logger.debug(f'environment_dict: {environment_dict}')
+    logger.debug(f"environment_dict: {environment_dict}")
 
     # Try our db upsert.
     try:
         # Put the new environment list in the db.
         resp = db.accounts.update_one(
-            {"account": current_user['account']},
-            {"$set": {"environments": environment_dict['environments']}},
-            upsert=True)
+            {"account": current_user["account"]},
+            {"$set": {"environments": environment_dict["environments"]}},
+            upsert=True,
+        )
         # Log for debugging.
-        logger.debug(f'resp.matched_count: {resp.matched_count}')
-        logger.debug(f'resp.modified_count: {resp.modified_count}')
-        logger.debug(f'resp.upserted_id: {resp.upserted_id}')
+        logger.debug(f"resp.matched_count: {resp.matched_count}")
+        logger.debug(f"resp.modified_count: {resp.modified_count}")
+        logger.debug(f"resp.upserted_id: {resp.upserted_id}")
     except Exception as e:
         # Log error.
         logger.error(f"Unexpected error occurred. {e}")
@@ -82,4 +85,4 @@ async def update_environment(environment: UpdateEnvironment, current_user: User 
         raise HTTPException(status_code=500, detail=f"Unexpected error occurred. {e}")
 
     # Return success.
-    return {'detail': 'Environments updated successfully.'}
+    return {"detail": "Environments updated successfully."}

@@ -2,6 +2,7 @@
 # from unittest.mock import patch
 # from fastapi import HTTPException
 from bson import ObjectId
+
 from src.api.routes.deploy import create_new_service
 
 
@@ -14,7 +15,7 @@ def test_deploy_create_new_service():
         "status": "Deploying",
         "version": "v1.0.0",
         "timestamp": "1617195244",
-        "custom": None
+        "custom": None,
     }
     response = create_new_service(deployment)
     # TODO: Query the db to make sure the service write was as expected.

@@ -1,5 +1,6 @@
-from requests import request
 import logging
+
+from requests import request
 from webutil.config import config
 
 logger = logging.getLogger(__name__)
@@ -9,17 +10,19 @@ def webapi(method, route, token=None, data=None, json=None):
     """
     Query api endpoint and return response.
     """
-    headers = {'Authorization': f'Bearer {token}'} if token is not None else None
+    headers = {"Authorization": f"Bearer {token}"} if token is not None else None
     try:
         response = request(
             method,
             f'{config("DPB_API_URI")}/{route}',
             headers=headers,
             json=json,
-            data=data
+            data=data,
         )
         # Log our response for debugging.
-        logger.debug(f"api {method} {route} response: {response.status_code} {response.json()}")
+        logger.debug(
+            f"api {method} {route} response: {response.status_code} {response.json()}"
+        )
     except Exception as error:
         # Log error for debugging.
         logger.error(f"api {method} {route} error: {error}")

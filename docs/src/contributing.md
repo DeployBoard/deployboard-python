@@ -19,6 +19,20 @@ A runtime is provided via Docker.
 !!! Note
     The following commands are run from the project root.
 
+### Virtual Environment
+
+To ensure everyone has a similar environment, we create a virtual environment using the following commands.
+
+```
+# Create the virual environment.
+python3 -m venv venv
+
+# Activate the virtual environment.
+source venv/bin/activate
+```
+
+To leave the virtual environment, simply run `deactivate`.
+
 ### Build Bootstrap
 
 The UI requires bootstrap. We use some custom scss variables which requires building bootstrap.
@@ -98,3 +112,20 @@ docker run --rm -it -p 8000:8000 -v ${PWD}/docs:/docs squidfunk/mkdocs-material
 ```
 
 Just like running via `docker-compose`, the Docs will be available at `localhost:8000`.
+
+## Committing
+
+We use pre-commit hooks to verify some things prior to committing to source control.
+
+To enable this, you need to run the following commands.
+
+!!! Note
+    Make sure to set up your [Virtual Environment](contributing.md#virtual-environment).
+
+```
+# Install pre-commit and any other dev dependencies.
+pip3 install -r requirements-dev.txt
+
+# Install git hooks in the .git directory.
+pre-commit install
+```
