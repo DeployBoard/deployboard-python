@@ -1,5 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
+
 from api.main import app
 
 client = TestClient(app)
@@ -9,9 +10,9 @@ client = TestClient(app)
 def test_get_apikey_valid_key(admin_token, apikey):
     response = client.get(f"/apikeys/{apikey}", headers={"Authorization": admin_token})
     assert response.status_code == 200
-    assert response.json()['_id'] == apikey
-    assert 'hashed_password' not in response.json()
-    assert '_id' in response.json()
+    assert response.json()["_id"] == apikey
+    assert "hashed_password" not in response.json()
+    assert "_id" in response.json()
 
 
 def test_get_apikey_bad_token(apikey):
@@ -27,7 +28,9 @@ def test_get_apikey_invalid_role(viewer_token, apikey):
 
 
 def test_get_apikey_missing_key(admin_token):
-    response = client.get("/apikeys/000000000000000000000000", headers={"Authorization": admin_token})
+    response = client.get(
+        "/apikeys/000000000000000000000000", headers={"Authorization": admin_token}
+    )
     assert response.status_code == 404
     assert response.json() == {"detail": "Key not found."}
 
@@ -37,5 +40,8 @@ def test_get_apikey_invalid_key_id(admin_token):
     response = client.get("/apikeys/foo", headers={"Authorization": admin_token})
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "'foo' is not a valid ObjectId, it must be a 12-byte input or a 24-character hex string"
+        "detail": (
+            "'foo' is not a valid ObjectId, it must be a 12-byte input"
+            "or a24-character hex string"
+        )
     }

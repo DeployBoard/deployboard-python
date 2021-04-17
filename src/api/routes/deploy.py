@@ -1,25 +1,26 @@
+import logging
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException
+
 from db.mongo import db
+from fastapi import APIRouter, Depends, HTTPException
 from models.deployments import DeploymentRequest
 from models.logs import Log
 from util.auth import get_api_key_in_header, verify_api_key, verify_role
 from util.hash import hash_dict, hash_string
 
-import logging
 logger = logging.getLogger(__name__)
 
 
 router = APIRouter(
-    prefix="/deploy",
-    tags=["Deploy"],
-    responses={404: {"description": "Not found"}}
+    prefix="/deploy", tags=["Deploy"], responses={404: {"description": "Not found"}}
 )
 
 
 # This endpoint is protected by API key, not by JWT.
 @router.api_route("/", methods=["PUT", "POST"])
-async def create_or_update_deployment(body: DeploymentRequest, api_key: str = Depends(get_api_key_in_header)):
+async def create_or_update_deployment(
+    body: DeploymentRequest, api_key: str = Depends(get_api_key_in_header)
+):
     """
     Creates a new deployment, or updates an existing deployment.
     """
@@ -32,26 +33,26 @@ async def create_or_update_deployment(body: DeploymentRequest, api_key: str = De
     # Convert our body from pydantic model to dict.
     deployment = body.dict()
     # Add timestamp as utc epoch.
-    deployment['timestamp'] = datetime.utcnow().timestamp()
+    deployment["timestamp"] = datetime.utcnow().timestamp()
     # Add the account from our api key.
-    deployment['account'] = api_key_object['account']
+    deployment["account"] = api_key_object["account"]
 
     # Create environment if it does not exist in our account.
-    handle_environment(deployment['account'], deployment['environment'])
+    handle_environment(deployment["account"], deployment["environment"])
 
     # Generate the hashed value for our new deployment object.
-    deployment['hash'] = hash_dict(deployment)
+    deployment["hash"] = hash_dict(deployment)
 
     # Get previous log's hash.
     previous_hash = get_previous_log_hash(
-        deployment['account'],
-        deployment['application'],
-        deployment['service'],
-        deployment['environment']
+        deployment["account"],
+        deployment["application"],
+        deployment["service"],
+        deployment["environment"],
     )
 
     # Hash the two hashes together to generate our hash_chain value.
-    deployment['hash_chain'] = hash_string(deployment['hash'] + previous_hash)
+    deployment["hash_chain"] = hash_string(deployment["hash"] + previous_hash)
 
     # Insert our object, including our new hashes, into the logs db.
     insert_to_logs(deployment)
@@ -86,11 +87,13 @@ def handle_environment(account, environment):
 
     if result.matched_count == 0:
         # Log exception.
-        logger.critical(f"handle_environment: No matching account, please report issue.")
+        logger.critical("handle_environment: No matching account, please report issue.")
         # Raise exception.
         raise HTTPException(
             status_code=500,
-            detail=f"Unexpected error occurred: No account found {result.matched_count}."
+            detail=(
+                f"Unexpected error occurred: No account found {result.matched_count}."
+            ),
         )
 
     return
@@ -98,43 +101,60 @@ def handle_environment(account, environment):
 
 def get_previous_log_hash(account, application, service, environment):
     """
-    Gets most recent log matching the account+app+service+env combination and returns the hash_chain.
+    Gets most recent log matching the account+app+service+env combination
+    and returns the hash_chain.
     """
 
     try:
         # Find the most recent log matching the account+app+service+env combination.
-        result = db.logs.find({
-            'account': account,
-            'application': application,
-            'service': service,
-            'environment': environment
-        }).sort('timestamp', -1).limit(1)
-        # We can't log here because we need to check if the result cursor is empty first.
+        result = (
+            db.logs.find(
+                {
+                    "account": account,
+                    "application": application,
+                    "service": service,
+                    "environment": environment,
+                }
+            )
+            .sort("timestamp", -1)
+            .limit(1)
+        )
+        # We can't log here because we need to check if the result cursor
+        # is empty first.
     except Exception as e:
         # Log exception.
         logger.error(f"get_previous_log_hash_exception: {e}")
         # Raise exception.
         raise HTTPException(status_code=500, detail=f"Unexpected error occurred: {e}")
 
-    # If an object already exists, we want to just take that hash, else we want to return an empty string.
+    # If an object already exists, we want to just take that hash,
+    # else we want to return an empty string.
     if result.count(with_limit_and_skip=True) == 0:
         # Log for debugging.
-        logger.debug(f"get_previous_log_hash_result: None")
+        logger.debug("get_previous_log_hash_result: None")
         # Return empty string.
         return ""
+    # We .limit(1) so I don't think this code will ever hit
+    # with 'with_limit_and_skip=True'.
     if result.count(with_limit_and_skip=True) > 1:
         # Log exception.
-        logger.critical(f"get_previous_log_hash_error: more than 1 record returned. Please report this issue.")
+        logger.critical(
+            "get_previous_log_hash_error: more than 1 record returned."
+            "Please report this issue."
+        )
         # Raise exception.
         raise HTTPException(
             status_code=500,
-            detail=f"Unexpected error occurred: Multiple results found {result.count(with_limit_and_skip=True)}."
+            detail=(
+                "Unexpected error occurred: Multiple results found"
+                f"{result.count(with_limit_and_skip=True)}."
+            ),
         )
     else:
         # Log for debugging.
         logger.debug(f"get_previous_log_hash_result: {result[0]}")
         # Return result.
-        return result[0]['hash_chain']
+        return result[0]["hash_chain"]
 
 
 def insert_to_logs(deployment: Log):
@@ -161,9 +181,7 @@ def update_service_with_latest(deployment):
     """
 
     service_response = find_service(
-        deployment['account'],
-        deployment['application'],
-        deployment['service']
+        deployment["account"], deployment["application"], deployment["service"]
     )
 
     if service_response is None:
@@ -182,11 +200,7 @@ def find_service(account, application, service):
     """
 
     # Set our query.
-    query = {
-        "account": account,
-        "application": application,
-        "service": service
-    }
+    query = {"account": account, "application": application, "service": service}
 
     try:
         # Find our service.
@@ -202,16 +216,22 @@ def find_service(account, application, service):
     # If the service does not exist, we want to return None, else return the result.
     if result.count(with_limit_and_skip=True) == 0:
         # Log for debugging.
-        logger.debug(f"find_service_result: None")
+        logger.debug("find_service_result: None")
         # Return None.
         return None
     if result.count(with_limit_and_skip=True) > 1:
         # Log exception.
-        logger.critical(f"find_service_error: more than 1 service returned. Please report this issue.")
+        logger.critical(
+            "find_service_error: "
+            "more than 1 service returned. Please report this issue."
+        )
         # Raise exception.
         raise HTTPException(
             status_code=500,
-            detail=f"Unexpected error occurred: Multiple services found {result.count(with_limit_and_skip=True)}."
+            detail=(
+                "Unexpected error occurred: Multiple services found"
+                f"{result.count(with_limit_and_skip=True)}."
+            ),
         )
     else:
         # Log for debugging.
@@ -225,22 +245,23 @@ def create_new_service(deployment):
     Create new service, inserting our deployment data.
     """
 
-    # TODO: Can we use the service pydantic model here to make sure we're always in sync?
+    # TODO: Can we use the service pydantic model here
+    #  to make sure we're always in sync?
     # Build our service object to insert
     service = {
-        'schema_version': 1.0,
-        'account': deployment['account'],
-        'application': deployment['application'],
-        'service': deployment['service'],
-        'tags': [],
-        'environments': {
-            deployment['environment']: {
-                'version': deployment['version'],
-                'status': deployment['status'],
-                'timestamp': deployment['timestamp'],
-                'custom': deployment['custom']
+        "schema_version": 1.0,
+        "account": deployment["account"],
+        "application": deployment["application"],
+        "service": deployment["service"],
+        "tags": [],
+        "environments": {
+            deployment["environment"]: {
+                "version": deployment["version"],
+                "status": deployment["status"],
+                "timestamp": deployment["timestamp"],
+                "custom": deployment["custom"],
             }
-        }
+        },
     }
     # Log for debugging
     logger.debug(f"create_new_service:service: {service}")
@@ -249,7 +270,7 @@ def create_new_service(deployment):
         # Insert new service into the services collection
         response = db.services.insert_one(service)
         # Log
-        logger.info(f'insert_service_response: {response.inserted_id}')
+        logger.info(f"insert_service_response: {response.inserted_id}")
     except Exception as e:
         # Log our exception for debugging.
         logger.error(f"e: {e}")
@@ -266,20 +287,20 @@ def update_existing_service(deployment):
 
     # Set our query for the update.
     query = {
-        "account": deployment['account'],
-        "application": deployment['application'],
-        "service": deployment['service']
+        "account": deployment["account"],
+        "application": deployment["application"],
+        "service": deployment["service"],
     }
     # Create our update command to add the environment.
     # addToSet is used to append to the array, only if it is not already in the array.
     update_command = {
         "$set": {
             "environments": {
-                deployment['environment']: {
-                    "version": deployment['version'],
-                    "status": deployment['status'],
-                    "timestamp": deployment['timestamp'],
-                    "custom": deployment['custom']
+                deployment["environment"]: {
+                    "version": deployment["version"],
+                    "status": deployment["status"],
+                    "timestamp": deployment["timestamp"],
+                    "custom": deployment["custom"],
                 }
             }
         }
@@ -299,14 +320,20 @@ def update_existing_service(deployment):
     # If we failed to modify existing item, raise exception.
     if response.modified_count == 1:
         # Log for debugging.
-        logger.debug(f"find_service_result: None")
+        logger.debug("find_service_result: None")
         # Return True.
         return response.modified_count
     else:
         # Log exception.
-        logger.critical(f"update_existing_service: No matching service found. Please report this issue.")
+        logger.critical(
+            "update_existing_service: No matching service found."
+            "Please report this issue."
+        )
         # Raise exception.
         raise HTTPException(
             status_code=500,
-            detail=f"Unexpected error occurred: No matching service found {response.modified_count}."
+            detail=(
+                "Unexpected error occurred: "
+                f"No matching service found {response.modified_count}."
+            ),
         )

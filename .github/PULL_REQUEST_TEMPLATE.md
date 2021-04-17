@@ -6,7 +6,7 @@ closes #_ISSUE_
 
 _REPLACE WITH SUMMARY_
 
---- 
+---
 
 ### Dependencies
 
@@ -14,7 +14,7 @@ List any dependencies that are required for this change that may need attention 
 
 _REPLACE_
 
---- 
+---
 
 ### How Has This Been Tested?
 

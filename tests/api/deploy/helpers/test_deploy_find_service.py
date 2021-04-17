@@ -7,7 +7,7 @@ from src.api.routes.deploy import find_service
 def test_deploy_find_service_success():
     response = find_service(account="Example", application="Sample", service="Api")
     assert type(response) is dict
-    assert 'environments' in response
+    assert "environments" in response
 
 
 def test_deploy_find_service_missing():
@@ -25,10 +25,12 @@ def test_deploy_find_service_missing():
 
 
 # TODO: Mock the db exception.
-# @patch("routes.deploy.db", side_effect=Exception('mock'))
+# @patch("routes.deploy.db", side_effect=Exception("mock"))
 # def test_deploy_find_service_exception(mock):
 #     with pytest.raises(HTTPException):
-#         response = find_service("MissingAccount", "MissingApplication", "MissingService")
+#         response = find_service(
+#             "MissingAccount", "MissingApplication", "MissingService"
+#         )
 #         assert response.status_code == 500
 #         assert response.json() == {"detail": "Unexpected error occurred."}
 #         assert mock.called_once()

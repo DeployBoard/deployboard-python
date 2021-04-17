@@ -4,7 +4,7 @@ Tests are run within a Docker container.
 
 Run the following commands from the root of the repository.
 
-First build the test docker container.  
+First build the test docker container.
 
 ```
 docker build --no-cache -t deployboard-pytest:latest -f tests/Dockerfile .

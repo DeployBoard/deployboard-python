@@ -1,17 +1,20 @@
-import os
 import logging
+import os
 import secrets
-from random import random, randint
 from datetime import datetime, timedelta
-from pymongo import MongoClient
+from random import randint, random
+
 from passlib.context import CryptContext
+from pymongo import MongoClient
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Get our mongo settings from environment
 mongo_uri = os.environ["MONGO_URI"] if "MONGO_URI" in os.environ else "localhost:27017"
-database = os.environ["MONGO_DATABASE"] if "MONGO_DATABASE" in os.environ else "deployboard"
+database = (
+    os.environ["MONGO_DATABASE"] if "MONGO_DATABASE" in os.environ else "deployboard"
+)
 mongo_client = MongoClient(mongo_uri)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -41,8 +44,8 @@ def create_account():
             "lowercase": 0,
             "uppercase": 0,
             "number": 0,
-            "special": 0
-        }
+            "special": 0,
+        },
     }
     # Insert the user into the db.
     insert_resp = db.accounts.insert_one(account_dict)
@@ -83,7 +86,7 @@ def create_user(user_role, enabled):
         "enabled": enabled,
         "created_timestamp": 1610053395,
         "modified_timestamp": 1610053395,
-        "modified_by": "admin@example.com"
+        "modified_by": "admin@example.com",
     }
     # Insert the user into the db.
     insert_resp = db.users.insert_one(user_dict)
@@ -108,7 +111,7 @@ def create_api_key(api_key_role):
         "created_by": "jdoe@example.com",
         "created_timestamp": 1610053395,
         "modified_by": "admin@example.com",
-        "modified_timestamp": 1610053395
+        "modified_timestamp": 1610053395,
     }
     # Insert the user into the db.
     insert_resp = db.apikeys.insert_one(api_key_dict)
@@ -135,30 +138,21 @@ def create_service(application, service):
                 "status": "Deployed",
                 "version": "1.3.0",
                 "timestamp": 1608433640,
-                "custom": {
-                    "module": "foo",
-                    "color": "green"
-                }
+                "custom": {"module": "foo", "color": "green"},
             },
             "Stage": {
                 "status": "Deployed",
                 "version": "1.2.1",
                 "timestamp": 1608523640,
-                "custom": {
-                    "module": "foo",
-                    "color": "green"
-                }
+                "custom": {"module": "foo", "color": "green"},
             },
             "Prod": {
                 "status": "Deployed",
                 "version": "1.2.0",
                 "timestamp": 1608623640,
-                "custom": {
-                    "module": "foo",
-                    "color": "green"
-                }
-            }
-        }
+                "custom": {"module": "foo", "color": "green"},
+            },
+        },
     }
     # Insert the user into the db.
     insert_resp = db.services.insert_one(service_dict)
@@ -177,7 +171,8 @@ def create_logs(application, service, days_ago):
     # Instantiate our logs list.
     logs_list = []
     # for days_ago generate datetime object
-    # Generate a list of log dicts each time incrementing the version, and the timestamp.
+    # Generate a list of log dicts each time incrementing the version,
+    # and the timestamp.
     for day in range(days_ago):
         for env in ["Dev", "Stage", "Prod"]:
             # Generate a random version number for this deployment.
@@ -198,12 +193,15 @@ def create_logs(application, service, days_ago):
                     "status": "Deploying",
                     "version": version,
                     "timestamp": start_timestamp,
-                    "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
-                    "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
-                    "custom": {
-                        "module": "foo",
-                        "color": "green"
-                    }
+                    "hash": (
+                        "a7cd6c222ea5fc1463c0ca3f70b93035"
+                        "196c8c4f34d89181ff5086bd7b58bfff"
+                    ),
+                    "hash_chain": (
+                        "6a9ec5bf3b15354e1cb8599e2262a9ff"
+                        "8d808d793987399bb9bd41c949cd661a"
+                    ),
+                    "custom": {"module": "foo", "color": "green"},
                 }
             )
             # Add a random time to our start date to give us a stop date.
@@ -211,7 +209,7 @@ def create_logs(application, service, days_ago):
             # Convert our stop date to epoch for our stop timestamp.
             stop_timestamp = stop_date.timestamp()
             # Set finished status as Failed 20% of the time.
-            if random() < .2:
+            if random() < 0.2:
                 finished_status = "Failed"
             else:
                 finished_status = "Deployed"
@@ -227,12 +225,15 @@ def create_logs(application, service, days_ago):
                     "status": finished_status,
                     "version": version,
                     "timestamp": stop_timestamp,
-                    "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
-                    "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
-                    "custom": {
-                        "module": "foo",
-                        "color": "green"
-                    }
+                    "hash": (
+                        "a7cd6c222ea5fc1463c0ca3f70b93035"
+                        "196c8c4f34d89181ff5086bd7b58bfff"
+                    ),
+                    "hash_chain": (
+                        "6a9ec5bf3b15354e1cb8599e2262a9ff"
+                        "8d808d793987399bb9bd41c949cd661a"
+                    ),
+                    "custom": {"module": "foo", "color": "green"},
                 }
             )
     # Log for debugging.
@@ -247,7 +248,7 @@ def create_logs(application, service, days_ago):
 
 def seed():
     # Instantiate our return dict with our account creation.
-    response_dict = {'account': create_account()}
+    response_dict = {"account": create_account()}
 
     # Instantiate our users dict.
     users_dict = {}
@@ -264,25 +265,25 @@ def seed():
         api_keys_dict[role] = create_api_key(role)
 
     # Add users_dict to our return_dict.
-    response_dict['users'] = users_dict
+    response_dict["users"] = users_dict
     # Add api_keys_dict to our return_dict.
-    response_dict['api_keys'] = api_keys_dict
+    response_dict["api_keys"] = api_keys_dict
 
     # Create list of application/service combo dicts.
     application_services = [
         {"application": "Sample", "service": "Api"},
         {"application": "Sample", "service": "Web"},
         {"application": "Admin", "service": "Api"},
-        {"application": "Admin", "service": "Web"}
+        {"application": "Admin", "service": "Web"},
     ]
     # Write a service object in the db for each item in the list.
     for item in application_services:
         # Write the service in the db.
-        response_dict['service'] = create_service(item['application'], item['service'])
+        response_dict["service"] = create_service(item["application"], item["service"])
         # Write the logs to the db.
-        response_dict['logs'] = create_logs(item['application'], item['service'], 120)
+        response_dict["logs"] = create_logs(item["application"], item["service"], 120)
 
-    logger.info(f'response_dict: {response_dict}')
+    logger.info(f"response_dict: {response_dict}")
 
     return response_dict
 

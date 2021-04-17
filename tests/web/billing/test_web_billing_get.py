@@ -1,10 +1,11 @@
 def test_web_billing_get_success(client, admin_token):
     with client.session_transaction() as session:
-        session['logged_in'] = True
-        session['exp'] = 999999999999999
-        session['token'] = admin_token
-    response = client.get('/settings/billing/')
+        session["logged_in"] = True
+        session["exp"] = 999999999999999
+        session["token"] = admin_token
+    response = client.get("/settings/billing/")
     assert response.status_code == 200
+
 
 # TODO: Add this test when we lock the billing route.
 # def test_web_billing_get_unauthorized_viewer(client, viewer_token):

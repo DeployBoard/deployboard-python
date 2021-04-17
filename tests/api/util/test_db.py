@@ -1,7 +1,9 @@
 import os
 from unittest import mock
-from src.api.db import mongo
+
 from pymongo.database import Database
+
+from src.api.db import mongo
 
 
 # TODO: This is not covering what is expected.

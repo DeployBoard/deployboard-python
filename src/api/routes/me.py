@@ -1,16 +1,15 @@
 import logging
+
 from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException
-from util.auth import get_current_active_user
-from models.users import UpdateUserAsSelf, User, UserResponse
 from db.mongo import db
+from fastapi import APIRouter, Depends, HTTPException
+from models.users import UpdateUserAsSelf, User, UserResponse
+from util.auth import get_current_active_user
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
-    prefix="/me",
-    tags=["Me"],
-    responses={404: {"description": "Not found"}}
+    prefix="/me", tags=["Me"], responses={404: {"description": "Not found"}}
 )
 
 
@@ -27,12 +26,15 @@ async def get_me(current_user: User = Depends(get_current_active_user)):
 
 
 @router.patch("/")
-async def update_me(user_updates: UpdateUserAsSelf, current_user: User = Depends(get_current_active_user)):
+async def update_me(
+    user_updates: UpdateUserAsSelf,
+    current_user: User = Depends(get_current_active_user),
+):
     """
     Update requester user account with allowed properties.
     """
-    logger.debug(f'current_user: {current_user}')
-    logger.debug(f'user_updates: {user_updates}')
+    logger.debug(f"current_user: {current_user}")
+    logger.debug(f"user_updates: {user_updates}")
     # Convert our user_updates to a dict.
     user_updates_dict = dict(user_updates)
     # Set our updates.
@@ -43,7 +45,7 @@ async def update_me(user_updates: UpdateUserAsSelf, current_user: User = Depends
             # Add to the updates dict.
             updates[key] = user_updates_dict[key]
     # Log for debugging.
-    logger.debug(f'updates: {updates}')
+    logger.debug(f"updates: {updates}")
     # Check if our updates dict is empty since all fields are optional.
     if not updates:
         # Skip the DB call, we aren't making any updates.
@@ -73,4 +75,4 @@ def update_user_in_db(query, update_command):
         # Raise exception if user not found.
         raise HTTPException(status_code=500, detail="Unexpected error occurred.")
     # Return the modified count.
-    return {'modified_count': str(resp.modified_count)}
+    return {"modified_count": str(resp.modified_count)}

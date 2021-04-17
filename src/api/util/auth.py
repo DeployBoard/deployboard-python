@@ -1,33 +1,35 @@
-from datetime import datetime, timedelta
 import logging
-from bson import ObjectId
+from datetime import datetime, timedelta
 
+from bson import ObjectId
+from db.mongo import db
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import APIKeyHeader, OAuth2PasswordBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
-from models.users import User
 from models.auth import TokenData
-from db.mongo import db
+from models.users import User
+from passlib.context import CryptContext
 from util.config import config
 
 logger = logging.getLogger(__name__)
 
 # to get a string like this run:
 # openssl rand -hex 32
-SECRET_KEY = config('APP_SECRET')
+SECRET_KEY = config("APP_SECRET")
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-# TODO: If we are leaving auto_error=False, we need to have some way to check for User or APIKey
+# TODO: If we are leaving auto_error=False,
+#  we need to have some way to check for User or APIKey
 #  and protect APIKeyOnly endpoints.
-api_key_header = APIKeyHeader(name='X-API-Key', auto_error=False)
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 
 def authenticate_user(username: str, password: str):
     """
-    Verifies a username and password match what is in the db and that the user is enabled.
+    Verifies a username and password match what is in the db
+    and that the user is enabled.
     """
     logger.debug(SECRET_KEY)
     user = get_user_by_email(username)
@@ -36,13 +38,16 @@ def authenticate_user(username: str, password: str):
         logger.debug("No user found.")
         return False
     # If user is disabled we want to return invalid username/password.
-    if not user['enabled']:
+    if not user["enabled"]:
         logger.info(f"Disabled user: {username} attempted to log in.")
         return False
     # Convert the _id to a string.
-    user['_id'] = str(user['_id'])
-    # If user exists, but the password does not match, we want to return invalid username/password.
-    if not verify_password(password + user['salt'] + config('DPB_PEPPER'), user['hashed_password']):
+    user["_id"] = str(user["_id"])
+    # If user exists, but the password does not match,
+    # we want to return invalid username/password.
+    if not verify_password(
+        password + user["salt"] + config("DPB_PEPPER"), user["hashed_password"]
+    ):
         logger.info(f"User: {username} incorrect password.")
         return False
     return user
@@ -90,7 +95,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"}
+        headers={"WWW-Authenticate": "Bearer"},
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -106,12 +111,15 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     user = get_user_by_id(token_data.username)
     if user is None:
         raise credentials_exception
-    # If user is disabled we want to return invalid username/password.  # TODO: This is duplicate, maybe func this.
-    if not user['enabled']:
+    # TODO: This is duplicate, maybe func this.
+    # If user is disabled we want to return invalid username/password.
+    if not user["enabled"]:
         logger.info(f"User: {user['email']} is disabled, attempted to use credentials.")
-        raise HTTPException(status_code=400, detail="Inactive user")  # TODO: maybe return something more generic in case of attacker.
+        raise HTTPException(
+            status_code=400, detail="Inactive user"
+        )  # TODO: maybe return something more generic in case of attacker.
     # Convert the _id to a string.
-    user['_id'] = str(user['_id'])
+    user["_id"] = str(user["_id"])
     logger.debug(user)
     return user
 
@@ -123,7 +131,7 @@ def get_current_active_user(current_user: User = Depends(get_current_user)):
 
 def verify_role(user, allowed_roles):
     # Check if the user's role is allowed
-    if user['role'] not in allowed_roles:
+    if user["role"] not in allowed_roles:
         raise HTTPException(status_code=401, detail="Unauthorized")
     return True
 

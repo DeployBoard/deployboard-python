@@ -12,7 +12,7 @@ def config(param):
         "DPB_WEB_PORT": "8080",
         "DPB_WEB_DEBUG": False,
         "DPB_API_URI": "http://api:8081",
-        "APP_SECRET": "changeme"
+        "APP_SECRET": "changeme",
     }
 
     # Loop through our defaults.

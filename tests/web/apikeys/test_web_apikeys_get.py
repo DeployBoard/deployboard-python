@@ -1,8 +1,7 @@
-import pytest
 from unittest.mock import patch
 
 
-@patch('webroutes.apikeys.webapi')
+@patch("webroutes.apikeys.webapi")
 def test_web_apikeys_get_success(mock, client, admin_token):
     mock.return_value = [
         {
@@ -15,25 +14,25 @@ def test_web_apikeys_get_success(mock, client, admin_token):
             "created_by": "jdoe@example.com",
             "created_timestamp": 1610053395,
             "modified_by": "admin@example.com",
-            "modified_timestamp": 1610921529
+            "modified_timestamp": 1610921529,
         }
     ]
     with client.session_transaction() as session:
-        session['logged_in'] = True
-        session['exp'] = 999999999999999
-        session['token'] = admin_token
-    response = client.get('/settings/apikeys/')
+        session["logged_in"] = True
+        session["exp"] = 999999999999999
+        session["token"] = admin_token
+    response = client.get("/settings/apikeys/")
     assert response.status_code == 200
-    assert b'test-api-key' in response.data
-    assert b'Created By' in response.data
+    assert b"test-api-key" in response.data
+    assert b"Created By" in response.data
 
 
-@patch('webroutes.apikeys.webapi', side_effect=Exception('mock'))
+@patch("webroutes.apikeys.webapi", side_effect=Exception("mock"))
 def test_web_apikeys_get_exception(mock, client, admin_token):
     with client.session_transaction() as session:
-        session['logged_in'] = True
-        session['exp'] = 999999999999999
-        session['token'] = admin_token
-    response = client.get('/settings/apikeys/')
+        session["logged_in"] = True
+        session["exp"] = 999999999999999
+        session["token"] = admin_token
+    response = client.get("/settings/apikeys/")
     assert response.status_code == 200
-    assert b'mock' in response.data
+    assert b"mock" in response.data

@@ -1,19 +1,18 @@
+import logging
 from datetime import datetime
 from typing import List
-from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException
-from util.auth import get_current_active_user, verify_role
-from models.apikeys import CreateApiKey, ApiKeyResponse
-from models.users import User
-from db.mongo import db
 
-import logging
+from bson import ObjectId
+from db.mongo import db
+from fastapi import APIRouter, Depends, HTTPException
+from models.apikeys import ApiKeyResponse, CreateApiKey
+from models.users import User
+from util.auth import get_current_active_user, verify_role
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
-    prefix="/apikeys",
-    tags=["ApiKeys"],
-    responses={404: {"description": "Not found"}}
+    prefix="/apikeys", tags=["ApiKeys"], responses={404: {"description": "Not found"}}
 )
 
 
@@ -23,13 +22,15 @@ async def get_apikeys(current_user: User = Depends(get_current_active_user)):
     Gets all api keys from the requester account.
     """
     # Verify the user has the allowed role.
-    verify_role(current_user, ["Admin"])  # TODO: this func is called for every route find a way to better do this
+    verify_role(
+        current_user, ["Admin"]
+    )  # TODO: this func is called for every route find a way to better do this
     # Instantiate empty list.
     apikeys = []
     # For each user returned from find().
-    for key in db.apikeys.find({"account": current_user['account']}):
+    for key in db.apikeys.find({"account": current_user["account"]}):
         # Convert the _id to a string.
-        key['_id'] = str(key['_id'])
+        key["_id"] = str(key["_id"])
         # Append user to the list.
         apikeys.append(key)
     # Log our list for debugging.
@@ -46,12 +47,14 @@ async def get_apikey(_id, current_user: User = Depends(get_current_active_user))
     # Verify the user has the allowed role.
     verify_role(current_user, ["Admin"])
     # Query db for user id in the requester account.
-    key = db.apikeys.find_one({"_id": ObjectId(_id), "account": current_user['account']})
+    key = db.apikeys.find_one(
+        {"_id": ObjectId(_id), "account": current_user["account"]}
+    )
     if key is None:
         # Raise exception if key not found.
         raise HTTPException(status_code=404, detail="Key not found.")
     # Convert the _id to a string.
-    key['_id'] = str(key['_id'])
+    key["_id"] = str(key["_id"])
     # Log our list for debugging.
     logger.debug(key)
     # Return the list to the client.
@@ -59,7 +62,9 @@ async def get_apikey(_id, current_user: User = Depends(get_current_active_user))
 
 
 @router.put("/")
-async def create_apikey(apikey: CreateApiKey, current_user: User = Depends(get_current_active_user)):
+async def create_apikey(
+    apikey: CreateApiKey, current_user: User = Depends(get_current_active_user)
+):
     """
     Creates a new api key
     """
@@ -69,16 +74,17 @@ async def create_apikey(apikey: CreateApiKey, current_user: User = Depends(get_c
     timestamp = datetime.utcnow().timestamp()
     # We can't insert the model, so we have to convert to dict.
     apikey_dict = apikey.dict()
-    # We don't accept account in the payload, so append the current_user's account to the new user_dict.
-    apikey_dict['account'] = current_user['account']
+    # We don't accept account in the payload,
+    # so append the current_user's account to the new user_dict.
+    apikey_dict["account"] = current_user["account"]
     # Add created by current user.
-    apikey_dict['created_by'] = current_user['email']
+    apikey_dict["created_by"] = current_user["email"]
     # Add modified by current user since this is the beginning of history for this key.
-    apikey_dict['modified_by'] = current_user['email']
+    apikey_dict["modified_by"] = current_user["email"]
     # Add created timestamp.
-    apikey_dict['created_timestamp'] = timestamp
+    apikey_dict["created_timestamp"] = timestamp
     # Add modified timestamp.
-    apikey_dict['modified_timestamp'] = timestamp
+    apikey_dict["modified_timestamp"] = timestamp
     try:
         # Put the new apikey_dict in the db.
         resp = db.apikeys.insert_one(apikey_dict)
@@ -86,7 +92,7 @@ async def create_apikey(apikey: CreateApiKey, current_user: User = Depends(get_c
         logger.error(f"Unexpected error occurred. {e}")
         raise HTTPException(status_code=500, detail=f"Unexpected error occurred. {e}")
     # Return the inserted user id.
-    return {'_id': str(resp.inserted_id)}
+    return {"_id": str(resp.inserted_id)}
 
 
 @router.delete("/{_id}")
@@ -95,15 +101,19 @@ async def delete_apikey(_id, current_user: User = Depends(get_current_active_use
     Deletes an api key
     """
     # Verify the user has the allowed role.
-    verify_role(current_user, ["Admin"])  # TODO: find a way to build this into the get_current_active_user func
+    verify_role(
+        current_user, ["Admin"]
+    )  # TODO: find a way to build this into the get_current_active_user func
     # Log for debugging.
     logger.debug(current_user)
     # Query db for user id in the requester account.
-    apikey = db.apikeys.find_one({"_id": ObjectId(_id), "account": current_user['account']})
+    apikey = db.apikeys.find_one(
+        {"_id": ObjectId(_id), "account": current_user["account"]}
+    )
     if apikey is None:
         # Raise exception if api key not found.
         raise HTTPException(status_code=404, detail="Key not found.")
     # Delete the api key.
-    db.apikeys.delete_one({"_id": ObjectId(_id), "account": current_user['account']})
+    db.apikeys.delete_one({"_id": ObjectId(_id), "account": current_user["account"]})
     # Return the deleted api key id.
-    return {'_id': _id, 'detail': 'Key deleted successfully.'}
+    return {"_id": _id, "detail": "Key deleted successfully."}

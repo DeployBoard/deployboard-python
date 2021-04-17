@@ -1,4 +1,5 @@
 import logging
+
 from fastapi import HTTPException
 from util.account import get_account
 
@@ -17,21 +18,22 @@ def check_password_policy(account: str, password: str):
     # Log account_response for debugging.
     logger.debug(f"account_response: {account_response}")
     # Get the password_policy from our account response.
-    policy = account_response['password_policy']
+    policy = account_response["password_policy"]
 
     # Perform our checks of the supplied password against the policy.
     # Create this status object so we can return the status of all tests to the caller.
     status = {
-        'length': check_length(password, policy['length']),
-        'lowercase': check_lowercase(password, policy['lowercase']),
-        'uppercase': check_uppercase(password, policy['uppercase']),
-        'number': check_number(password, policy['number']),
-        'special': check_special(password, policy['special'])
+        "length": check_length(password, policy["length"]),
+        "lowercase": check_lowercase(password, policy["lowercase"]),
+        "uppercase": check_uppercase(password, policy["uppercase"]),
+        "number": check_number(password, policy["number"]),
+        "special": check_special(password, policy["special"]),
     }
     # Log status for debugging.
     logger.debug(f"status: {status}")
     # TODO: Implement way to check if new password is same as old password.
-    # We probably have to hash the current password with the previous salt + pepper then compare the hashes.
+    # We probably have to hash the current password with the previous salt + pepper
+    # then compare the hashes.
     # check_previous(password, previous_password_hash)
 
     # Default our summary to True. We'll update later if we find issues.
@@ -44,10 +46,13 @@ def check_password_policy(account: str, password: str):
     if summary is False:
         # Log that password did not meet policy.
         logger.info("Password does not meet the policy.")
-        # Raise an exception because the password provided did not meet the account's policy.
-        raise HTTPException(status_code=400, detail=f"Password does not meet the policy: {policy}")
+        # Raise an exception because the password provided did not meet
+        # the account's policy.
+        raise HTTPException(
+            status_code=400, detail=f"Password does not meet the policy: {policy}"
+        )
 
-    return {'summary': summary, 'status': status}
+    return {"summary": summary, "status": status}
 
 
 def check_length(password, requirement):
@@ -120,9 +125,39 @@ def check_special(password, requirement):
     """
     # Define the special characters we want to support.
     special_characters = [
-        " ", "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+",
-        ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[",
-        "\\", "]", "^", "_", "`", "{", "|", "}", "~"
+        " ",
+        "!",
+        '"',
+        "#",
+        "$",
+        "%",
+        "&",
+        "'",
+        "(",
+        ")",
+        "*",
+        "+",
+        ",",
+        "-",
+        ".",
+        "/",
+        ":",
+        ";",
+        "<",
+        "=",
+        ">",
+        "?",
+        "@",
+        "[",
+        "\\",
+        "]",
+        "^",
+        "_",
+        "`",
+        "{",
+        "|",
+        "}",
+        "~",
     ]
     # Initialize our counter.
     count = 0

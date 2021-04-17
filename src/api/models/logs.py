@@ -1,6 +1,7 @@
 from typing import List, Optional
-from pydantic import Field
+
 from models.base import CustomBaseModel
+from pydantic import Field
 
 
 class NewLog(CustomBaseModel):
@@ -18,10 +19,7 @@ class NewLog(CustomBaseModel):
             "environment": "Dev",
             "status": "Deploying",
             "version": "1.3.0",
-            "custom": {
-                "module": "foo",
-                "color": "green"
-            }
+            "custom": {"module": "foo", "color": "green"},
         }
 
 
@@ -43,18 +41,19 @@ class Log(NewLog):
                 "status": "Deploying",
                 "version": "1.3.0",
                 "timestamp": 1610146671,
-                "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
-                "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
-                "custom": {
-                    "module": "foo",
-                    "color": "green"
-                }
+                "hash": (
+                    "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff"
+                ),
+                "hash_chain": (
+                    "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a"
+                ),
+                "custom": {"module": "foo", "color": "green"},
             }
         }
 
 
 class LogResponse(Log):
-    id: str = Field(..., alias='_id')
+    id: str = Field(..., alias="_id")
 
     class Config:
         arbitrary_types_allowed = True
@@ -69,11 +68,12 @@ class LogResponse(Log):
                 "status": "Deploying",
                 "version": "1.3.0",
                 "timestamp": 1610146671,
-                "hash": "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff",
-                "hash_chain": "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a",
-                "custom": {
-                    "module": "foo",
-                    "color": "green"
-                }
+                "hash": (
+                    "a7cd6c222ea5fc1463c0ca3f70b93035196c8c4f34d89181ff5086bd7b58bfff"
+                ),
+                "hash_chain": (
+                    "6a9ec5bf3b15354e1cb8599e2262a9ff8d808d793987399bb9bd41c949cd661a"
+                ),
+                "custom": {"module": "foo", "color": "green"},
             }
         }
