@@ -138,6 +138,3 @@ build_bootstrap/
 
 # Secrets file used for testing github actions locally with act
 .secrets
-
-# Sample event used for testing github actions locally with act
-.github/actions/sample-event.json
