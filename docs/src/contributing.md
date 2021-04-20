@@ -33,6 +33,8 @@ source venv/bin/activate
 
 To leave the virtual environment, simply run `deactivate`.
 
+After leaving, you can delete the virtual environment by simply running `rm -rf venv` from the project root.
+
 ### Build Bootstrap
 
 The UI requires bootstrap. We use some custom scss variables which requires building bootstrap.
