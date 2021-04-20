@@ -49,6 +49,7 @@ nav:
     - usage/settings/environments.md
 - Deployment:
   - deployment/index.md
+  - deployment/quickstart.md
   - deployment/configuration.md
   - deployment/docker-hub.md
   - deployment/docker-source.md

@@ -1,5 +1,8 @@
 # Deployment - Intro
 
+!!! note
+    Kicking the tires? Check out our [Quick Start](quickstart.md).
+
 Deploying **DeployBoard** is relatively easy.
 
 There are several ways to do it depending on your specific use case and the tools that you use.
