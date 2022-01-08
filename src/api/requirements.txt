@@ -2,12 +2,12 @@
 # Usage: pip install -r requirements.txt
 
 # FastAPI Framework
-fastapi==0.63.0
-uvicorn==0.13.2
+fastapi==0.71.0
+uvicorn==0.16.0
 python-multipart==0.0.5
-python-jose[cryptography]==3.2.0
+python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-pydantic[email]==1.7.3
+pydantic[email]==1.9.0
 
 # MongoDB
-pymongo[srv]==3.11.2
+pymongo[srv]==3.12.0
