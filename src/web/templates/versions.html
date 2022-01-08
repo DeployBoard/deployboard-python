@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+  <div class="d-inline">
+    <h2 class="float-left">Versions</h2>
+    <div class="float-right">
+      <input class="form-control" id="dashboardInput" type="text" placeholder="Filter..">
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Service</th>
+        {% for environment in environment_list %}
+        <th>{{ environment }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody id="dashboardTable">
+      {% for service in services %}
+      <tr>
+        <td>{{ service['application'] }}</td>
+        <td>{{ service['service'] }}</td>
+        {% for environment in environment_list %}
+        {% if environment in service['environments'] %}
+        <td>{{ service['environments'][environment]['version'] }}</td>
+        {% else %}
+        <td>N/A</td>
+        {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Filter Script -->
+<script>
+  $(document).ready(function(){
+    $("#dashboardInput").on("keyup", function() {
+      let value = $(this).val().toLowerCase();
+      $("#dashboardTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+
+{% endblock %}
