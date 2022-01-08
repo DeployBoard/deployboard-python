@@ -22,6 +22,6 @@ You no longer have to reach our to your Dev or Ops team to find out what version
 
 Answers common questions:
 
-* "What version of <app> is deployed to <env>?"
-* "When was <app> deployed to <env>?"
-* "What applications were deployed around <time>?"
+* "What version of `application` is deployed to `environment`?"
+* "When was `application` deployed to `environment`?"
+* "What applications were deployed around `time`?"
