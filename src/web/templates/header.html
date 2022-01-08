@@ -10,11 +10,15 @@
 
       <div class="collapse navbar-collapse" id="containerNavbar">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" href="/dashboard/">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.path == '/ci/' %}active{% endif %}"" href="/ci/">CI</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dashboards
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/dashboard/">Main</a>
+              <a class="dropdown-item" href="/dashboard/versions/">Versions</a>
+              <a class="dropdown-item" href="/ci/">CI</a>
+            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/applications/' %}active{% endif %}"" href="/applications/">Applications</a>

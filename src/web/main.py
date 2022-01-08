@@ -16,6 +16,7 @@ from webroutes.logout import logout_page
 from webroutes.logs import logs_page
 from webroutes.me import me_page
 from webroutes.users import users_page
+from webroutes.versions import versions_page
 from webutil.config import config
 from webutil.webapi import webapi
 
@@ -29,6 +30,7 @@ csrf = CSRFProtect(app)
 app.register_blueprint(login_page, url_prefix="/login")
 app.register_blueprint(logout_page, url_prefix="/logout")
 app.register_blueprint(dashboard_page, url_prefix="/dashboard")
+app.register_blueprint(versions_page, url_prefix="/dashboard/versions")
 app.register_blueprint(ci_page, url_prefix="/ci")
 app.register_blueprint(applications_page, url_prefix="/applications")
 app.register_blueprint(logs_page, url_prefix="/logs")
