@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BOOTSTRAP_VERSION="4.6.0"
-JQUERY_VERSION="3.5.1"
+JQUERY_VERSION="3.6.0"
 
 echo 'cleaning from previous build'
 rm -rf build_bootstrap

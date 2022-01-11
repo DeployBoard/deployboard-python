@@ -105,9 +105,11 @@ def get_previous_log_hash(account, application, service, environment):
     and returns the hash_chain.
     """
 
+    logger.debug("Attempting to get_previous_log_hash")
+
     try:
         # Find the most recent log matching the account+app+service+env combination.
-        result = (
+        result = list(
             db.logs.find(
                 {
                     "account": account,
@@ -119,48 +121,32 @@ def get_previous_log_hash(account, application, service, environment):
             .sort("timestamp", -1)
             .limit(1)
         )
-        # We can't log here because we need to check if the result cursor
-        # is empty first.
+
+        # If an object already exists, we want to just take that hash,
+        # else we want to return an empty string.
+        if len(result) > 0:
+            # Log for debugging.
+            logger.debug(f"get_previous_log_hash_result: {result}")
+            # Return result.
+            return result[0]["hash_chain"]
+        else:
+            # Log for debugging.
+            logger.debug("get_previous_log_hash_result: None")
+            # Return empty string.
+            return ""
+
     except Exception as e:
         # Log exception.
         logger.error(f"get_previous_log_hash_exception: {e}")
         # Raise exception.
         raise HTTPException(status_code=500, detail=f"Unexpected error occurred: {e}")
 
-    # If an object already exists, we want to just take that hash,
-    # else we want to return an empty string.
-    if result.count(with_limit_and_skip=True) == 0:
-        # Log for debugging.
-        logger.debug("get_previous_log_hash_result: None")
-        # Return empty string.
-        return ""
-    # We .limit(1) so I don't think this code will ever hit
-    # with 'with_limit_and_skip=True'.
-    if result.count(with_limit_and_skip=True) > 1:
-        # Log exception.
-        logger.critical(
-            "get_previous_log_hash_error: more than 1 record returned."
-            "Please report this issue."
-        )
-        # Raise exception.
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                "Unexpected error occurred: Multiple results found"
-                f"{result.count(with_limit_and_skip=True)}."
-            ),
-        )
-    else:
-        # Log for debugging.
-        logger.debug(f"get_previous_log_hash_result: {result[0]}")
-        # Return result.
-        return result[0]["hash_chain"]
-
 
 def insert_to_logs(deployment: Log):
     """
     Insert into the logs collection.
     """
+    logger.debug("Attempting: insert_to_logs")
     try:
         # Insert the deployment object into the logs db.
         result = db.logs.insert_one(deployment)
@@ -204,9 +190,9 @@ def find_service(account, application, service):
 
     try:
         # Find our service.
-        result = db.services.find(query)
+        result = list(db.services.find(query))
         # Log the result for debugging.
-        logger.debug(f"find_service_count: {result.count()}")
+        logger.debug(f"find_service_count: {len(result)}")
     except Exception as e:
         # Log our exception for debugging.
         logger.error(f"e: {e}")
@@ -214,12 +200,12 @@ def find_service(account, application, service):
         raise HTTPException(status_code=500, detail="Unexpected error occurred.")
 
     # If the service does not exist, we want to return None, else return the result.
-    if result.count(with_limit_and_skip=True) == 0:
+    if len(result) == 0:
         # Log for debugging.
         logger.debug("find_service_result: None")
         # Return None.
         return None
-    if result.count(with_limit_and_skip=True) > 1:
+    if len(result) > 1:
         # Log exception.
         logger.critical(
             "find_service_error: "
@@ -229,8 +215,7 @@ def find_service(account, application, service):
         raise HTTPException(
             status_code=500,
             detail=(
-                "Unexpected error occurred: Multiple services found"
-                f"{result.count(with_limit_and_skip=True)}."
+                f"Unexpected error occurred: Multiple services found {len(result)}."
             ),
         )
     else:
