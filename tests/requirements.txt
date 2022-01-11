@@ -2,10 +2,10 @@
 # Usage: pip install -r requirements.txt
 
 # Automated tests
-pytest==6.2.1
-pytest-cov==2.11.1
-pytest-order==0.9.3
-pytest-asyncio==0.14.0
+pytest==6.2.5
+pytest-cov==3.0.0
+pytest-order==1.0.1
+pytest-asyncio==0.16.0
 
 # MongoDB - In memory for tests
-pymongo_inmemory==0.1.5
+pymongo_inmemory==0.2.3

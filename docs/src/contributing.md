@@ -57,6 +57,12 @@ The application should be running now at `localhost:80`, but you still need to s
 
 ### Seed the DB
 
+!!! Note
+    First you need to install some local dependencies for our seed script.
+    ```
+    pip3 install -r requirements-dev.txt
+    ```
+
 Once the application is up, you can seed the database using the provided script in the `/scripts/` directory.
 
 ```
