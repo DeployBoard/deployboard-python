@@ -54,7 +54,7 @@ def index():
 
 @app.before_request
 def check_session_expired():
-    """ Checks if session is expired """
+    """Checks if session is expired"""
     # If user is logged in.
     if "logged_in" in session:
         # Check if we have exp in session.
@@ -100,7 +100,7 @@ def get_me_info():
 
 @app.template_filter()
 def epoch_to_date(epoch):
-    """ Converts epoch to timezone in user's profile """
+    """Converts epoch to timezone in user's profile"""
     # TODO: Get timezone from the user's session, and convert to that.
     #  Need to first set it in user's session after login.
     # Log for debugging.
@@ -115,7 +115,7 @@ def epoch_to_date(epoch):
 
 @app.context_processor
 def inject_theme():
-    """ Injects globals into Jinja templates """
+    """Injects globals into Jinja templates"""
     # Check if theme is in session.
     if "theme" in session:
         # If theme in session, use the theme.
