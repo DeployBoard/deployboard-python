@@ -22,5 +22,4 @@ repos:
     rev: v1.0.5
     hooks:
     -   id: python-bandit-vulnerability-check
-        args: [--verbose, -ll, --skip, 'B104']
-        files: src/
+        args: [--verbose, -ll, --skip, 'B104', --recursive, src/]
