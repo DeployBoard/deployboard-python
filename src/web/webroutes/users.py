@@ -32,7 +32,6 @@ def users_get_single(_id):
     Queries our users api endpoint for specific user _id
     then passes that data into the users template
     """
-    # TODO: Implement this
     try:
         # Call our api endpoint.
         response = webapi("get", f"users/{_id}", token=session["token"])

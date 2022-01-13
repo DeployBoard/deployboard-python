@@ -1,7 +1,7 @@
 from typing import Optional
 
 from models.base import CustomBaseModel
-from pydantic import EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field
 
 
 class ApiKey(CustomBaseModel):
@@ -59,16 +59,14 @@ class CreateApiKey(CustomBaseModel):
         schema_extra = {"example": {"name": "test-api-key", "role": "Editor"}}
 
 
-class UpdateApiKey(CustomBaseModel):
-    _id: str = None
-    name: Optional[EmailStr]
+class UpdateApiKey(BaseModel):
+    name: Optional[str]
     role: Optional[str]
     enabled: Optional[bool]
 
     class Config:
         schema_extra = {
             "example": {
-                "_id": "5fe14013fc83e4c8f18ff9b5",
                 "name": "test-api-key",
                 "role": "Editor",
                 "enabled": False,

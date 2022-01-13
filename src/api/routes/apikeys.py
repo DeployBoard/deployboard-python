@@ -5,7 +5,7 @@ from typing import List
 from bson import ObjectId
 from db.mongo import db
 from fastapi import APIRouter, Depends, HTTPException
-from models.apikeys import ApiKeyResponse, CreateApiKey
+from models.apikeys import ApiKeyResponse, CreateApiKey, UpdateApiKey
 from models.users import User
 from util.auth import get_current_active_user, verify_role
 
@@ -93,6 +93,43 @@ async def create_apikey(
         raise HTTPException(status_code=500, detail=f"Unexpected error occurred. {e}")
     # Return the inserted user id.
     return {"_id": str(resp.inserted_id)}
+
+
+@router.patch("/{_id}")
+async def update_apikey(
+    _id,
+    apikey: UpdateApiKey,
+    current_user: User = Depends(get_current_active_user),
+):
+    """
+    Updates specific api key from the requester account.
+    """
+    # Verify the user has the allowed role.
+    verify_role(current_user, ["Admin"])
+    # We can't insert the model, so we have to convert to dict.
+    apikey_dict = apikey.dict()
+    # Set our updates.
+    updates = {}
+    # Loop through the payload for non empty values.
+    for key in apikey_dict:
+        if apikey_dict[key] is not None:
+            # Add to the updates dict.
+            updates[key] = apikey_dict[key]
+    # Log for debugging.
+    logger.debug(f"updates: {updates}")
+    # Check if our updates dict is empty since all fields are optional.
+    if not updates:
+        # Skip the DB call, we aren't making any updates.
+        return {"modified_count": "0"}
+    # Make our update request to the db.
+    response = db.apikeys.update_one({"_id": ObjectId(_id)}, {"$set": updates})
+    # Log response for debugging.
+    logger.debug(f"apikey: {response.raw_result}")
+    if response.matched_count == 0:
+        # Raise exception if key not found.
+        raise HTTPException(status_code=404, detail="Key not found.")
+    # Return success.
+    return {"status": "Updated successfully."}
 
 
 @router.delete("/{_id}")
