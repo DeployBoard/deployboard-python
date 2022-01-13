@@ -1,0 +1,42 @@
+<div class="modal fade" id="EditApiKeyModal" tabindex="-1" role="dialog" aria-labelledby="EditApiKeyModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="EditApiKeyModalTitle">Edit Api Key</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-group" action="{{ url_for('apikeys_page.apikeys_post') }}" method=post>
+        <div class="modal-body">
+          <!-- Api Key Name -->
+          <label for="apikey_name" class="col-form-label">Name:</label>
+          <input type="text" class="form-control" placeholder="Name" name="apikey_name" id="apikey_name" value="{{ key['name'] }}" required autofocus/>
+          <!-- Api Key Role-->
+          <label for="apikey_role" class="col-form-label">Role:</label>
+          <select class="form-control" name="apikey_role" id="apikey_role">
+            <option {% if key['role'] == 'Viewer' %}selected{% endif %} value="Viewer">Viewer</option>
+            <option {% if key['role'] == 'Editor' %}selected{% endif %} value="Editor">Editor</option>
+            <option {% if key['role'] == 'Admin' %}selected{% endif %} value="Admin">Admin</option>
+          </select>
+          <!-- Api Key Enabled -->
+          <label for="apikey_enabled" class="col-form-label">Enabled:</label>
+          <select class="form-control" name="apikey_enabled" id="apikey_enabled">
+            <option {% if key['enabled'] == True %}selected{% endif %} value="True">Enabled</option>
+            <option {% if key['enabled'] == False %}selected{% endif %} value="False">Disabled</option>
+          </select>
+          <!-- Api Key Id-->
+          <input type="hidden" name="apikey_id" value="{{ key['_id'] }}"/>
+          <!-- Action -->
+          <input type="hidden" name="action" value="edit"/>
+          <!-- CSRF Token -->
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <input type=submit value="Submit" name="Update Api Key" class="btn btn-primary"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

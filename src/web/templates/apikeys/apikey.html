@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Settings</h2>
+</div>
+
+<div class="container">
+  {% include "settings_nav.html" %}
+
+  {% if error %}
+  <div>{{ error }}</div>
+  {% endif %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Key</th>
+        <th>Role</th>
+        <th>Enabled</th>
+        <th>Created By</th>
+        <th>Created Timestamp (UTC)</th>
+        <th>Modified By</th>
+        <th>Modified Timestamp (UTC)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if key %}
+      <tr>
+        <td>{{ key['name'] }}</td>
+        <td>{{ key['_id'] }}</td>
+        <td>{{ key['role'] }}</td>
+        <td>{{ key['enabled'] }}</td>
+        <td>{{ key['created_by'] }}</td>
+        <td>{{ key['created_timestamp'] | epoch_to_date }}</td>
+        <td>{{ key['modified_by'] }}</td>
+        <td>{{ key['modified_timestamp'] | epoch_to_date }}</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+  <button type="button" class="float-right btn-sm btn-primary" data-toggle="modal" data-target="#EditApiKeyModal">
+    Edit Key
+  </button>
+  <button type="button" class="float-right btn-sm btn-danger" data-toggle="modal" data-target="#DeleteApiKeyModal">
+    Delete Key
+  </button>
+</div>
+
+{% if key %}
+  {% include "apikeys/edit_apikey_modal.html" %}
+  {% include "apikeys/delete_apikey_modal.html" %}
+{% endif %}
+
+{% endblock %}
