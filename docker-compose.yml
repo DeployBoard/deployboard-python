@@ -6,7 +6,7 @@ services:
     volumes:
       - db-data:/data/db
     ports:
-      - 27017:27017
+      - "27017:27017"
     networks:
       - backend-network
 
@@ -16,7 +16,7 @@ services:
     volumes:
       - ./src/api:/app
     ports:
-      - 8081:8081
+      - "8081:8081"
     networks:
       - backend-network
       - frontend-network
@@ -33,7 +33,7 @@ services:
     volumes:
       - ./src/web:/app
     ports:
-      - 80:8080
+      - "80:8080"
     networks:
       - frontend-network
     environment:
@@ -49,7 +49,7 @@ services:
     volumes:
       - ./docs:/docs
     ports:
-      - 8000:8000
+      - "8000:8000"
 
 volumes:
   db-data:

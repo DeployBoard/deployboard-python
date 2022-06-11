@@ -11,7 +11,8 @@ from webroutes.ci import ci_page
 from webroutes.dashboard import dashboard_page
 from webroutes.environments import environments_page
 from webroutes.integrations import integrations_page
-from webroutes.login import login_page
+from webroutes.login.login import login_page
+from webroutes.login.okta import okta_page
 from webroutes.logout import logout_page
 from webroutes.logs import logs_page
 from webroutes.me import me_page
@@ -28,6 +29,7 @@ app.secret_key = config("APP_SECRET")
 csrf = CSRFProtect(app)
 
 app.register_blueprint(login_page, url_prefix="/login")
+app.register_blueprint(okta_page, url_prefix="/login/okta")
 app.register_blueprint(logout_page, url_prefix="/logout")
 app.register_blueprint(dashboard_page, url_prefix="/dashboard")
 app.register_blueprint(versions_page, url_prefix="/dashboard/versions")
@@ -67,11 +69,17 @@ def check_session_expired():
                 # redirect to login page to clear session,
                 # which will redirect to login page.
                 return redirect(url_for("logout_page.logout"))
+        else:
+            logger.debug("Logged in with no session exp.")
+            return redirect(url_for("logout_page.logout"))
     elif "login" in request.base_url:
         # Ignore if /login
         pass
     elif "static" in request.base_url:
         # Ignore if /static/*
+        pass
+    elif "logout" in request.base_url:
+        # Ignore if /logout
         pass
     else:
         # Redirect all unauthenticated requests to the login page.
@@ -83,6 +91,11 @@ def get_me_info():
     """
     Queries our me api endpoint then passes that data into the me template
     """
+    excludes_group = ("/login", "/logout")
+    if request.endpoint in excludes_group:
+        # Log for debugging
+        logger.debug("Not getting a token for this page.")
+        return
     try:
         # Get data from our me api endpoint.
         response = webapi("get", "me/", session["token"])

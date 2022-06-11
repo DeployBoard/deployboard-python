@@ -31,7 +31,7 @@ def authenticate_user(username: str, password: str):
     Verifies a username and password match what is in the db
     and that the user is enabled.
     """
-    logger.debug(SECRET_KEY)
+    # logger.debug(f"secret_key: {SECRET_KEY}")
     user = get_user_by_email(username)
     # If user is empty we want to return invalid username/password.
     if not user:
@@ -90,7 +90,7 @@ def get_user_by_id(user_id):
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
-    logger.debug(SECRET_KEY)
+    # logger.debug(SECRET_KEY)
     logger.debug("Getting current user")
     credentials_exception = HTTPException(
         status_code=401,

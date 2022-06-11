@@ -11,7 +11,11 @@ def logout():
     """
     Clears the user session and redirects to login page
     """
+    # Log user's session before clearing.
+    logger.debug(f"session after clear: {session}")
     # Clear the user's session.
     session.clear()
+    # Log user's session after clearing.
+    logger.debug(f"session after clear: {session}")
     # Redirect to login page
     return redirect(url_for("login_page.login"))

@@ -5,7 +5,7 @@ from flask import request, url_for
 
 
 @patch("jose.jwt.decode")
-@patch("webroutes.login.webapi")
+@patch("webroutes.login.login.webapi")
 def test_web_login_post_success(
     mock_post, mock_decode, client, admin_username, password
 ):
@@ -15,6 +15,7 @@ def test_web_login_post_success(
     response = client.post(
         "/login/",
         data=dict(email=admin_username, password=password, csrf="pytest"),
+        # headers={"Authorization": "Basic"},
         follow_redirects=False,
     )
     assert response.status_code == 302
@@ -39,7 +40,7 @@ def test_web_login_post_no_password(client, admin_username):
     assert b"Bad Request" in response.data
 
 
-@patch("webroutes.login.webapi", side_effect=Exception("mock"))
+@patch("webroutes.login.login.webapi", side_effect=Exception("mock"))
 def test_web_login_post_exception(mock, client, admin_username, password):
     response = client.post(
         "/login/",

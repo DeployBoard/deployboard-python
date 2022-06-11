@@ -7,7 +7,9 @@ client = TestClient(app)
 
 def test_login():
     response = client.post(
-        "/token/", {"username": "admin@example.com", "password": "secret"}
+        "/token/",
+        {"username": "admin@example.com", "password": "secret"},
+        headers={"Authorization": "Basic"},
     )
     assert response.status_code == 200
     assert type(response.json()) == dict
@@ -15,7 +17,9 @@ def test_login():
 
 def test_invalid_login():
     response = client.post(
-        "/token/", {"username": "admin@example.com", "password": "incorrect_password"}
+        "/token/",
+        {"username": "admin@example.com", "password": "incorrect_password"},
+        headers={"Authorization": "Basic"},
     )
     assert response.status_code == 401
     assert response.json() == {"detail": "Invalid username or password"}

@@ -6,11 +6,31 @@ from webutil.config import config
 logger = logging.getLogger(__name__)
 
 
-def webapi(method, route, token=None, data=None, json=None):
+def webapi(
+    method,
+    route,
+    headers={},
+    token=None,
+    data=None,
+    json=None,
+    auth_method=None,
+):
     """
     Query api endpoint and return response.
     """
-    headers = {"Authorization": f"Bearer {token}"} if token is not None else None
+    if token:
+        # Set Authorization header as Bearer if we have a token.
+        headers["Authorization"] = f"Bearer {token}"
+
+    # auth_method is only used during the /token route.
+    if auth_method:
+        # Set Authorization header to auth_method if we pass it.
+        headers["Authorization"] = auth_method
+
+    # Content-Type to our api is always "application/json"
+    headers["Content-Type"] = "application/json"
+
+    logger.debug(f"headers: {headers}")
     try:
         response = request(
             method,

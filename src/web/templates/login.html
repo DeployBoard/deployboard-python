@@ -10,6 +10,9 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <br>
         <input class="btn btn-primary btn-block" type="submit" value="Login">
+        {% if sso %}
+        <a class="btn btn-success btn-block" href="{{ sso["link"] }}">Login with {{ sso["name"] }}</a>
+        {% endif %}
     </form>
 </div>
 

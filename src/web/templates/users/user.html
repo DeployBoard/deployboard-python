@@ -2,17 +2,14 @@
 
 {% block body %}
 
+{% if not error %}
+
 <div class="container">
-    <h2>Settings</h2>
+  <h2>Settings</h2>
 </div>
 
 <div class="container">
   {% include "settings_nav.html" %}
-
-  {% if error %}
-  <div>{{ error }}</div>
-  {% endif %}
-
   <table>
     <thead>
       <tr>
@@ -34,24 +31,36 @@
         <td>{{ user['first_name'] }}</td>
         <td>{{ user['last_name'] }}</td>
         <td>{{ user['enabled'] }}</td>
-        <td>{{ user['created_timestamp'] | epoch_to_date }}</td>
-        <td>{{ user['modified_timestamp'] | epoch_to_date }}</td>
+        {% if user['created_timestamp'] is not none %}
+          <td>{{ user['created_timestamp'] | epoch_to_date }}</td>
+        {% else %}
+          <td>{{ user['created_timestamp'] }}</td>
+        {% endif %}
+        {% if user['modified_timestamp'] is not none %}
+          <td>{{ user['modified_timestamp'] | epoch_to_date }}</td>
+        {% else %}
+          <td>{{ user['modified_timestamp'] }}</td>
+        {% endif %}
         <td>{{ user['modified_by'] }}</td>
       </tr>
       {% endif %}
     </tbody>
   </table>
-  <button type="button" class="float-right btn-sm btn-primary" data-toggle="modal" data-target="#EditUserModal">
-    Edit User
-  </button>
-  <button type="button" class="float-right btn-sm btn-danger" data-toggle="modal" data-target="#DeleteUserModal">
-    Delete User
-  </button>
+  {% if user['sso'] is none %}
+    <button type="button" class="float-right btn-sm btn-primary" data-toggle="modal" data-target="#EditUserModal">
+      Edit User
+    </button>
+    <button type="button" class="float-right btn-sm btn-danger" data-toggle="modal" data-target="#DeleteUserModal">
+      Delete User
+    </button>
+  {% endif %}
 </div>
 
 {% if user %}
   {% include "users/edit_user_modal.html" %}
   {% include "users/delete_user_modal.html" %}
+{% endif %}
+
 {% endif %}
 
 {% endblock %}

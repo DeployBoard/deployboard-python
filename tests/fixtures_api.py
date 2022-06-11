@@ -15,7 +15,9 @@ def seed_data():
 @pytest.fixture(scope="session")
 def admin_token():
     response = client.post(
-        "/token/", data={"username": "admin@example.com", "password": "secret"}
+        "/token/",
+        data={"username": "admin@example.com", "password": "secret"},
+        headers={"Authorization": "Basic"},
     )
     token = response.json()["access_token"]
     return f"Bearer {token}"
@@ -24,7 +26,9 @@ def admin_token():
 @pytest.fixture(scope="session")
 def editor_token():
     response = client.post(
-        "/token/", data={"username": "editor@example.com", "password": "secret"}
+        "/token/",
+        data={"username": "editor@example.com", "password": "secret"},
+        headers={"Authorization": "Basic"},
     )
     token = response.json()["access_token"]
     return f"Bearer {token}"
@@ -33,7 +37,9 @@ def editor_token():
 @pytest.fixture(scope="session")
 def viewer_token():
     response = client.post(
-        "/token/", data={"username": "viewer@example.com", "password": "secret"}
+        "/token/",
+        data={"username": "viewer@example.com", "password": "secret"},
+        headers={"Authorization": "Basic"},
     )
     token = response.json()["access_token"]
     return f"Bearer {token}"

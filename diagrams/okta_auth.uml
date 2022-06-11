@@ -1,0 +1,26 @@
+'press Ctrl+Shift+O to list diagrams
+'press Alt+D (Opt+D) to start server
+@startuml auth
+User -> UI : Login via Okta
+UI -> Okta : [POST] "OKTA_AUTH_URL"
+Okta -> UI : /login/okta/callback with "code"
+UI -> API : [POST] /token with "code"
+API -> Okta : [POST] verify the "code"
+Okta -> API : Verification successful
+API -> Okta : Get user info
+Okta -> API : Returns user info
+API -> MongoDB : Check if user exists in our db
+MongoDB -> API : Response
+
+group If user does not exist in our db
+    API -> MongoDB : Create new user
+    MongoDB -> API : success
+end
+
+API -> MongoDB : Attempt to map user to role
+API -> MongoDB : Update user login and attempted login
+MongoDB -> API : success
+API -> UI : api response with our own JWT
+UI -> UI : setSession with our user data
+UI -> User : Log in
+@enduml

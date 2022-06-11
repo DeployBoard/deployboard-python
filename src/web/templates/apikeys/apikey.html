@@ -2,16 +2,14 @@
 
 {% block body %}
 
+{% if not error %}
+
 <div class="container">
     <h2>Settings</h2>
 </div>
 
 <div class="container">
   {% include "settings_nav.html" %}
-
-  {% if error %}
-  <div>{{ error }}</div>
-  {% endif %}
 
   <table>
     <thead>
@@ -52,6 +50,8 @@
 {% if key %}
   {% include "apikeys/edit_apikey_modal.html" %}
   {% include "apikeys/delete_apikey_modal.html" %}
+{% endif %}
+
 {% endif %}
 
 {% endblock %}

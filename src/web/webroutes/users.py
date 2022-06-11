@@ -23,6 +23,7 @@ def users():
         # Return our page with error.
         return render_template("users/users.html", error=e)
     # Return our template.
+
     return render_template("users/users.html", users=response)
 
 

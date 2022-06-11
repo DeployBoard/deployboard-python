@@ -34,6 +34,7 @@ class UserResponse(User):
     modified_timestamp: float = None
     modified_by: str = None
     password_expires: float = None
+    sso: str = None
 
     class Config:
         schema_extra = {
@@ -50,6 +51,7 @@ class UserResponse(User):
                 "modified_timestamp": 1610053395,
                 "modified_by": "admin@example.com",
                 "password_expires": 1610053395,
+                "sso": "okta",
             }
         }
 

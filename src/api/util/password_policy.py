@@ -11,7 +11,7 @@ def check_password_policy(account: str, password: str):
     Verifies a password satisfies the specified policy.
     """
     logger.debug(f"account: {account}")
-    logger.debug(f"password: {password}")
+    # logger.debug(f"password: {password}")
 
     # Get our account info.
     account_response = get_account(account)

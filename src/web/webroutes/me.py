@@ -29,6 +29,7 @@ def update_me():
     """
     Parses the request form and sends a patch request to our me api endpoint.
     """
+    # TODO: Some of this should not work if we're using an SSO provider.
     # set our post data from request form.
     data = {
         "first_name": request.form["first_name"],

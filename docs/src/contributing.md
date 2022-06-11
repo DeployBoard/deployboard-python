@@ -23,15 +23,21 @@ A runtime is provided via Docker.
 
 To ensure everyone has a similar environment, we create a virtual environment using the following commands.
 
+!!! Note
+    The following commands use `pyenv` and `pyenv-virtualenv` to manage python versions. This is recommended instead of using your system version of python.
+
 ```
+# Install the version of python we're currently using.
+pyenv install 3.10.4
+
 # Create the virual environment.
-python3 -m venv venv
+pyenv virtualenv 3.10.4 dpb
 
 # Activate the virtual environment.
-source venv/bin/activate
+pyenv activate dpb
 ```
 
-To leave the virtual environment, simply run `deactivate`.
+To leave the virtual environment, simply run `pyenv deactivate`.
 
 After leaving, you can delete the virtual environment by simply running `rm -rf venv` from the project root.
 

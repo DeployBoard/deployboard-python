@@ -1,5 +1,5 @@
 # set base image (host OS)
-FROM python:3.10.1-slim
+FROM python:3.10.4-slim
 
 # set environment variables
 ENV DPB_ENV=pytest
