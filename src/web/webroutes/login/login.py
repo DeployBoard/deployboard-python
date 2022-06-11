@@ -1,6 +1,4 @@
 import logging
-import random
-import string
 
 from flask import Blueprint, redirect, render_template, request, session, url_for
 from jose import jwt
@@ -15,11 +13,6 @@ logger = logging.getLogger(__name__)
 
 SECRET_KEY = config("APP_SECRET")
 ALGORITHM = "HS256"
-
-# Generate a random string for our Okta STATE value.
-OKTA_STATE = "".join(random.choice(string.ascii_lowercase) for i in range(32))
-# Generate a random string for our Okta NONCE value.
-OKTA_NONCE = "".join(random.choice(string.ascii_lowercase) for i in range(32))
 
 
 @login_page.route("/", methods=["GET"])

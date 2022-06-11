@@ -13,4 +13,3 @@ def set_session(token, logged_in, user_id, exp, username, auth_method):
     session["exp"] = exp
     session["username"] = username
     session["auth_method"] = auth_method
-    return

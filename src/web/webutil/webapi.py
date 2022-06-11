@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def webapi(
     method,
     route,
-    headers={},
+    headers=None,
     token=None,
     data=None,
     json=None,
@@ -18,6 +18,10 @@ def webapi(
     """
     Query api endpoint and return response.
     """
+    # Init our headers if none were passed.
+    if headers is None:
+        headers = {}
+
     if token:
         # Set Authorization header as Bearer if we have a token.
         headers["Authorization"] = f"Bearer {token}"

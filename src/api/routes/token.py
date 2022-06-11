@@ -47,15 +47,15 @@ async def login_for_access_token(request: Request):
 
     if auth_method == "Basic":
         # We are Basic username/password auth.
-        logger.debug(
-            f"username: {payload['username'][0]}, password: {payload['password'][0]}"
-        )
+        # logger.debug(
+        #     f"username: {payload['username'][0]}, password: {payload['password'][0]}"
+        # )
         user = authenticate_user(payload["username"][0], payload["password"][0])
 
     # Get login method local or sso from the request and route to the proper method.
     if auth_method == "Okta":
-        logger.debug(f"token: {request.headers['authorization']}")
-        logger.debug(f"okta_code: {payload['okta_code'][0]}")
+        # logger.debug(f"token: {request.headers['authorization']}")
+        # logger.debug(f"okta_code: {payload['okta_code'][0]}")
         # Verify our Okta Code and get user info.
         user = verify_okta_code(payload["okta_code"][0])
         logger.debug(f"user: {user}")

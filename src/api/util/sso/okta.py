@@ -210,8 +210,6 @@ def create_account_if_first_user(account):
     if resp is None:
         create_account(account)
 
-    return
-
 
 def create_account(account):
     """

@@ -34,7 +34,7 @@ class UserResponse(User):
     modified_timestamp: float = None
     modified_by: str = None
     password_expires: float = None
-    sso: str = None
+    sso: Optional[str] = None
 
     class Config:
         schema_extra = {

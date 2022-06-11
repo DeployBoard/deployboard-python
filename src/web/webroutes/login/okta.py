@@ -1,6 +1,5 @@
 import logging
-import random
-import string
+import secrets
 
 import requests
 from flask import Blueprint, redirect, render_template, request, session, url_for
@@ -18,9 +17,10 @@ SECRET_KEY = config("APP_SECRET")
 ALGORITHM = "HS256"
 
 # Generate a random string for our Okta STATE value.
-OKTA_STATE = "".join(random.choice(string.ascii_lowercase) for i in range(32))
+OKTA_STATE = secrets.token_hex(16)
+
 # Generate a random string for our Okta NONCE value.
-OKTA_NONCE = "".join(random.choice(string.ascii_lowercase) for i in range(32))
+OKTA_NONCE = secrets.token_hex(16)
 
 
 @okta_page.route("/", methods=["GET"])
@@ -51,7 +51,7 @@ def login_okta_callback():
     # Get the code from the query string params.
     code = request.args.get("code")
     # Log code for debugging.
-    logger.debug(f"code: {code}")
+    # logger.debug(f"code: {code}")
     # If we don't have a code, return an error.
     if not code:
         if request.args.get("error") and request.args.get("error_description"):
