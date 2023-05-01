@@ -2,7 +2,7 @@
 # Usage: pip install -r requirements.txt
 
 # Flask Framework
-Flask==2.0.2
+Flask==2.3.2
 Flask-WTF==1.0.0
 
 requests==2.27.1
